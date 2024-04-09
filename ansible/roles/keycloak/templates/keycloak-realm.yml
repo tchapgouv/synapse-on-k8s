@@ -15,6 +15,14 @@ spec:
       - "en"
       - "fr"
     defaultLocale: "fr"
+    bruteForceProtected: true
+    permanentLockout: false
+    maxFailureWaitSeconds: 900
+    minimumQuickLoginWaitSeconds: 60
+    waitIncrementSeconds: 60
+    quickLoginCheckMilliSeconds: 1000
+    maxDeltaTimeSeconds: 43200
+    failureFactor: 30
     clients:
       - clientId: "{{ keycloak.client_id }}"
         name: "synapsecret"
