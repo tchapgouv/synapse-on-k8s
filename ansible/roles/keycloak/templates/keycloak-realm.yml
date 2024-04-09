@@ -23,6 +23,7 @@ spec:
     quickLoginCheckMilliSeconds: 1000
     maxDeltaTimeSeconds: 43200
     failureFactor: 30
+    passwordPolicy: "length(8) and notEmail(undefined) and upperCase(1) and lowerCase(1) and digits(1) and passwordHistory(3) and forceExpiredPasswordChange(365)"
     clients:
       - clientId: "{{ keycloak.client_id }}"
         name: "synapsecret"
