@@ -1,0 +1,87 @@
+name: Trivy develop report
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [develop]
+
+  # every sunday at 00:00
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  do-report:
+    name: "Trivy report"
+    environment: develop
+    env:
+      ENVIRONMENT: "develop"
+      OS_AUTH_URL: "https://auth.cloud.ovh.net/v3"
+      OS_IDENTITY_API_VERSION: 3
+      OS_USER_DOMAIN_NAME: "Default"
+      OS_PROJECT_DOMAIN_NAME: "Default"
+      OS_TENANT_ID: ${{ vars.OS_TENANT_ID }}
+      OS_TENANT_NAME: ${{ vars.OS_TENANT_NAME }}
+      OS_USERNAME: ${{ secrets.OS_USERNAME }}
+      OS_PASSWORD: ${{ secrets.OS_PASSWORD }}
+      OS_REGION_NAME: ${{ vars.OS_REGION_NAME }}
+      OVH_ENDPOINT: ${{ vars.OVH_ENDPOINT }}
+      OVH_APPLICATION_KEY: ${{ secrets.OVH_APPLICATION_KEY }}
+      OVH_APPLICATION_SECRET: ${{ secrets.OVH_APPLICATION_SECRET }}
+      OVH_CONSUMER_KEY: ${{ secrets.OVH_CONSUMER_KEY }}
+      OVH_CLOUD_PROJECT_SERVICE: ${{ vars.OS_TENANT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: ${{ vars.AWS_ENDPOINT_URL_S3 }}
+      AWS_S3_MEDIA_REPO_ENDPOINT: ${{ vars.AWS_S3_MEDIA_REPO_ENDPOINT }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.*
+
+      - name: Terraform Init
+        run: |
+          ./scripts/generate_provisioning_var_files.sh
+          cd terraform && terraform init -backend-config="bucket=terraform-states-hp-develop"
+
+      - name: Kube config
+        run: |
+          ./scripts/generate_configuration_var_files.sh
+          export KUBECONFIG=$PWD/local/kubeconfig.yml
+
+      - name: Test
+        run: |
+          echo "$KUBECONFIG"
+
+      - name: Trivy Summary
+        env:
+          TRIVY_VERSION: 0.50.1
+        run: |
+          docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
+          k8s --kubeconfig /work/local/kubeconfig.yml --cache-dir /tmp/trivy/ --report all pod -o trivy-summary.out
+
+      - name: Trivy full report
+        env:
+          TRIVY_VERSION: 0.50.1
+        run: |
+          docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
+          k8s --kubeconfig /work/local/kubeconfig.yml --cache-dir /tmp/trivy/ --report all pod -o trivy.out
+
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ vars.SMTP_HOST }}
+          server_port: 587
+          username: ${{ vars.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASS }}
+          subject: Trivy report
+          to: adrien.touzouli@beta.gouv.fr
+          from: ${{ vars.SMTP_DISPLAY_NAME }} <${{ vars.SMTP_FROM }}>
+          html_body: file://trivy-summary.out
+          attachments: trivy.out
