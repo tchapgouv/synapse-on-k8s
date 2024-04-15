@@ -3,6 +3,9 @@ name: Trivy develop report
 on:
   workflow_dispatch:
 
+  push:
+    branches: [develop]
+
   # every sunday at 00:00
   schedule:
     - cron: "0 0 * * 0"
@@ -60,28 +63,28 @@ jobs:
         run: |
           export KUBECONFIG=$PWD/local/kubeconfig.yml
           IMAGES=$(kubectl get pods --all-namespaces -o go-template --template="{{range .items}}{{range .spec.containers}}{{.image}} {{end}}{{end}}" | sort | tr " " "\n" | uniq)
-          mkdir -p sarif-report
-          COUNTER=0
+          mkdir -p sarif-reports
           for IMAGE in $IMAGES; do
             echo "Scanning image $IMAGE"
-            if (( $COUNTER > 20 )); then
-              echo "Too many files for upload action... stopping"
-              break
-            fi
             if [[ $IMAGE == *"registry.kubernatine.ovh"* ]]; then
               echo "Skipping image $IMAGE"
               continue
             fi
             SLUG=$(echo $IMAGE | tr ":" "_" | tr "/" "_")
             docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
-            image --severity CRITICAL --scanners vuln --format template --format sarif -o sarif-report/report-$SLUG.sarif $IMAGE
-            COUNTER=$(( COUNTER + 1 ))
+            image --severity CRITICAL --scanners vuln --format template --format sarif -o sarif-reports/report-$SLUG.sarif $IMAGE
           done
+
+      - name: Merge sarif reports
+        run: |
+          mkdir -p sarif-report
+          npm i -g @microsoft/sarif-multitool@v4.5.4
+          npx @microsoft/sarif-multitool merge sarif-reports/*.sarif --recurse true --output-directory=sarif-report --output-file=MergedResult.sarif
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: sarif-report
+          sarif_file: sarif-report/MergedResult.sarif
           category: trivy
 
       - name: Trivy Summary
