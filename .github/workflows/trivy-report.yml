@@ -120,8 +120,8 @@ jobs:
           server_port: 587
           username: ${{ vars.SMTP_USER }}
           password: ${{ secrets.SMTP_PASS }}
-          subject: Trivy report
+          subject: Vulnerability report
           to: eimis@beta.gouv.fr
           from: ${{ vars.SMTP_DISPLAY_NAME }} <${{ vars.SMTP_FROM }}>
-          body: "Hi,\nPlease find attached the trivy report.\n\nRegards,\n\n🤖"
+          body: "Hi,\nI checked develop environment for vulnerabilities, please find attached the trivy report.\n\nG00d luck,\n\n🤖"
           attachments: trivy.txt, trivy-summary.txt
