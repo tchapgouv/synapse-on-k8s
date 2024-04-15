@@ -16,7 +16,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Mkdir results-dir
-        # make sure results dir is created
         run: mkdir -p results-dir
 
       - name: scan code with kics
@@ -29,6 +28,7 @@ jobs:
           ignore_on_exit: "results"
 
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results-dir/results.sarif
+          category: kics
