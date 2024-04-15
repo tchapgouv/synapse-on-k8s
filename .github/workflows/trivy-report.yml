@@ -2,16 +2,16 @@ name: Trivy develop report
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [develop]
 
   # every sunday at 00:00
   schedule:
     - cron: "0 0 * * 0"
 
 jobs:
-  do-report:
-    name: "Trivy report"
+  trivy-report:
+    name: "Trivy report on develop environment"
+    outputs:
+      RUNNER: ${{ runner.name }}
     environment: develop
     env:
       ENVIRONMENT: "develop"
@@ -53,25 +53,50 @@ jobs:
       - name: Kube config
         run: |
           ./scripts/generate_configuration_var_files.sh
-          export KUBECONFIG=$PWD/local/kubeconfig.yml
 
-      - name: Test
+      - name: Scan all image to get sarif reports
+        env:
+          TRIVY_VERSION: 0.50.1
         run: |
-          echo "$KUBECONFIG"
+          export KUBECONFIG=$PWD/local/kubeconfig.yml
+          IMAGES=$(kubectl get pods --all-namespaces -o go-template --template="{{range .items}}{{range .spec.containers}}{{.image}} {{end}}{{end}}" | sort | tr " " "\n" | uniq)
+          mkdir -p sarif-report
+          COUNTER=0
+          for IMAGE in $IMAGES; do
+            echo "Scanning image $IMAGE"
+            if (( $COUNTER > 20 )); then
+              echo "Too many files for upload action... stopping"
+              break
+            fi
+            if [[ $IMAGE == *"registry.kubernatine.ovh"* ]]; then
+              echo "Skipping image $IMAGE"
+              continue
+            fi
+            SLUG=$(echo $IMAGE | tr ":" "_" | tr "/" "_")
+            docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
+            image --severity CRITICAL --scanners vuln --format template --format sarif -o sarif-report/report-$SLUG.sarif $IMAGE
+            COUNTER=$(( COUNTER + 1 ))
+          done
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sarif-report
+          category: trivy
 
       - name: Trivy Summary
         env:
           TRIVY_VERSION: 0.50.1
         run: |
           docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
-          k8s --kubeconfig /work/local/kubeconfig.yml --cache-dir /tmp/trivy/ --report all pod -o trivy-summary.out
+          k8s --kubeconfig /work/local/kubeconfig.yml --severity HIGH,CRITICAL --cache-dir /tmp/trivy/ -o trivy-summary.txt --report summary pod
 
       - name: Trivy full report
         env:
           TRIVY_VERSION: 0.50.1
         run: |
           docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
-          k8s --kubeconfig /work/local/kubeconfig.yml --cache-dir /tmp/trivy/ --report all pod -o trivy.out
+          k8s --kubeconfig /work/local/kubeconfig.yml --severity HIGH,CRITICAL --cache-dir /tmp/trivy/ -o trivy.txt --report all pod
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
@@ -81,7 +106,7 @@ jobs:
           username: ${{ vars.SMTP_USER }}
           password: ${{ secrets.SMTP_PASS }}
           subject: Trivy report
-          to: adrien.touzouli@beta.gouv.fr
+          to: eimis@beta.gouv.fr
           from: ${{ vars.SMTP_DISPLAY_NAME }} <${{ vars.SMTP_FROM }}>
-          html_body: file://trivy-summary.out
-          attachments: trivy.out
+          body: "Hi,\nPlease find attached the trivy report.\n\nRegards,\n\n🤖"
+          attachments: trivy.txt, trivy-summary.txt
