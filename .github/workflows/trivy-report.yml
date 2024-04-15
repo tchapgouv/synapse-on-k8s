@@ -10,7 +10,19 @@ on:
   schedule:
     - cron: "0 0 * * 0"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  sleep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: If after develop push, wait 15 minutes for deployment
+        uses: juliangruber/sleep-action@v2.0.0
+        with:
+          time: 15m
+
   trivy-report:
     name: "Trivy report on develop environment"
     outputs:
