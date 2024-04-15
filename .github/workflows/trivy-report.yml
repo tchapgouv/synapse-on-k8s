@@ -72,7 +72,7 @@ jobs:
             fi
             SLUG=$(echo $IMAGE | tr ":" "_" | tr "/" "_")
             docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
-            image --severity CRITICAL --scanners vuln --format template --format sarif -o sarif-reports/report-$SLUG.sarif $IMAGE
+            image --severity HIGH,CRITICAL --scanners vuln --format template --format sarif -o sarif-reports/report-$SLUG.sarif $IMAGE
           done
 
       - name: Merge sarif reports
