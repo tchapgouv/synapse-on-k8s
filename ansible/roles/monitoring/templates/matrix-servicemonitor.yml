@@ -12,3 +12,10 @@ spec:
       path: /_synapse/metrics
   namespaceSelector:
     any: true
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
