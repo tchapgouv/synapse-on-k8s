@@ -24,3 +24,9 @@ resource "ovh_cloud_project_kube_nodepool" "node_pool" {
   max_nodes     = var.max_nodes
   min_nodes     = var.min_nodes
 }
+
+resource "ovh_cloud_project_kube_iprestrictions" "ip_cluster" {
+  service_name = var.service_name
+  kube_id      = ovh_cloud_project_kube.k8s_element_cluster.id
+  ips          = ["${var.vlan_cidr}.128/${32 - var.desired_nodes}"]
+}
