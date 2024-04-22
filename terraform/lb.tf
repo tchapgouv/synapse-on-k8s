@@ -26,7 +26,7 @@ resource "openstack_lb_member_v2" "lb_member" {
   # node private ip
   address           = "192.168.40.200"
   # service node port (after ingress controller service creation)
-  protocol_port     = "30695"
+  protocol_port     = var.ingress_service_port
   depends_on        = [ openstack_lb_pool_v2.api_pool ]
 }
 
