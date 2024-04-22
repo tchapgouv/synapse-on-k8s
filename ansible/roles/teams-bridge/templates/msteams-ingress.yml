@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    external-dns.alpha.kubernetes.io/hostname: "{{ msteams.server_name }}"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
   name: msteams-ingress
   namespace: msteams

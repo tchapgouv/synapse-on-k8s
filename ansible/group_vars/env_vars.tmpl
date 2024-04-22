@@ -11,9 +11,6 @@ ingress_controller:
 cert_manager:
   version: "1.14.4"
   issuer_mail: ${ISSUER_MAIL}
-external_dns:
-  version: "v0.14.1"
-  registry_id: ${ENVIRONMENT}
 keycloak:
   server_name: ${KEYCLOAK_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
   image_tag: ${KEYCLOAK_IMAGE_TAG}
