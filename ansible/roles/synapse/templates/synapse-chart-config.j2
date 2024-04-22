@@ -42,7 +42,6 @@ ingress:
   className: nginx
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    external-dns.alpha.kubernetes.io/hostname: "{{ matrix.server_name }}"
     nginx.ingress.kubernetes.io/proxy-body-size: {{ matrix.media_upload_max_size_mb }}m
   tls:
     - hosts:
