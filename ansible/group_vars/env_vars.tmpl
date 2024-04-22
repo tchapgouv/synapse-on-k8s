@@ -7,6 +7,7 @@ ovh:
 dns_zone: ${DNS_ZONE}
 ingress_controller:
   version: "4.10.0"
+  node_port: ${INGRESS_SERVICE_PORT}
 cert_manager:
   version: "1.14.4"
   issuer_mail: ${ISSUER_MAIL}

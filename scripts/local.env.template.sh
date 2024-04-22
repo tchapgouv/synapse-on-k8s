@@ -43,6 +43,7 @@ export AWS_REGION="<the OVH s3 region>"
 # variables used by infrastructure components
 export ENV_IN_URL="<part of the URL that will be specific for each environment>"
 export CLUSTER_VERSION="<kubernetes version of the cluster: 1.23, 1.24, ...>"
+export INGRESS_SERVICE_PORT="<port of the ingress NodePort service e.g. 30695>"
 export NODEPOOL_FLAVOR="<flavor set to each node : b2-7, b2-15, R2-30, ...>"
 export DESIRED_NODES_NUM="<Desired number of kubernetes nodes>"
 export MAX_NODES_NUM="<Maximum number of kubernetes nodes>"

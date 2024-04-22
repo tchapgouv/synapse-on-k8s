@@ -359,6 +359,7 @@ spec:
     port: 443
     protocol: TCP
     targetPort: https
+    nodePort: {{ ingress_controller.node_port }}
   selector:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx

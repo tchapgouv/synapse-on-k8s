@@ -77,3 +77,8 @@ variable "s3_media_repo_endpoint" {
   description = "S3 endpoint for media repo"
   type        = string
 }
+
+variable "ingress_service_port" {
+  description = "Port of the ingress service. Entrypoint of the cluster for the octavia LB"
+  type        = string
+}
