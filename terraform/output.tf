@@ -3,8 +3,25 @@ output "kubeconfig" {
   sensitive = true
 }
 
+output "app_subnet_id" {
+  value = openstack_networking_subnet_v2.subnet.id
+}
+
+output "floating_network_id" {
+  value = data.openstack_networking_network_v2.ext_net.id
+}
+
+output "lb_floating_ip" {
+  description = "the floating ip of the load balancer"
+  value       = openstack_networking_floatingip_v2.lb_fip.address
+}
+
 output "clusterid" {
   value = ovh_cloud_project_kube.k8s_element_cluster.id
+}
+
+output "cluster_name" {
+  value = ovh_cloud_project_kube.k8s_element_cluster.name
 }
 
 output "synapse_db_password" {
@@ -80,9 +97,4 @@ output "s3_media_repo_bucket_name" {
 output "s3_media_repo_url" {
   description = "the url of the s3 media repo"
   value       = "https://${aws_s3_bucket.media_repo_bucket.bucket}.${var.s3_media_repo_endpoint}/"
-}
-
-output "lb_floating_ip" {
-  description = "the floating ip of the load balancer"
-  value       = openstack_networking_floatingip_v2.lb_fip.address
 }

@@ -22,7 +22,7 @@ resource "ovh_cloud_project_database_ip_restriction" "ip_keycloak_restriction" {
   engine       = "postgresql"
   cluster_id   = ovh_cloud_project_database.pg_keycloak_database.id
   service_name = ovh_cloud_project_database.pg_keycloak_database.service_name
-  ip           = "${var.vlan_cidr}.0/24"
+  ip           = var.app_vlan_cidr
 }
 
 resource "ovh_cloud_project_database_postgresql_user" "keycloak" {

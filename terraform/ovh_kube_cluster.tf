@@ -7,7 +7,7 @@ resource "ovh_cloud_project_kube" "k8s_element_cluster" {
   private_network_id = openstack_networking_network_v2.private_network.id
 
   private_network_configuration {
-    default_vrack_gateway              = "${var.vlan_cidr}.1"
+    default_vrack_gateway              = ""
     private_network_routing_as_default = true
   }
   timeouts {
