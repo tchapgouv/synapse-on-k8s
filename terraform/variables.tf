@@ -123,3 +123,13 @@ variable "ingress_service_port_websecure" {
   description = "Port of the ingress service 443 Entrypoint of the cluster for the octavia LB"
   type        = string
 }
+
+variable "dns_zone" {
+  description = "OVH DNS zone that will be updated"
+  type        = string
+}
+
+variable "env_in_url" {
+  description = "subdmain of the DNS zone that will be updated"
+  type        = string
+}
