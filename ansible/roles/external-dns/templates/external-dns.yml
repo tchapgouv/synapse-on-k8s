@@ -58,6 +58,13 @@ spec:
       containers:
         - name: external-dns
           image: "registry.k8s.io/external-dns/external-dns:{{ external_dns.version }}"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
           securityContext:
             allowPrivilegeEscalation: false
             seccompProfile:
