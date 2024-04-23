@@ -24,6 +24,8 @@ jobs:
           time: 15m
 
   trivy-report:
+    permissions:
+      security-events: write
     name: "Trivy report on develop environment"
     outputs:
       RUNNER: ${{ runner.name }}
