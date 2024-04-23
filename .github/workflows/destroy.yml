@@ -13,6 +13,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   #### Openstack vars from openrc file
   OS_AUTH_URL: "https://auth.cloud.ovh.net/v3"

@@ -1,0 +1,127 @@
+name: Trivy develop report
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches: [develop]
+
+  # every sunday at 00:00
+  schedule:
+    - cron: "0 0 * * 0"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sleep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: If after develop push, wait 15 minutes for deployment
+        uses: juliangruber/sleep-action@v2.0.0
+        with:
+          time: 15m
+
+  trivy-report:
+    name: "Trivy report on develop environment"
+    outputs:
+      RUNNER: ${{ runner.name }}
+    environment: develop
+    env:
+      ENVIRONMENT: "develop"
+      OS_AUTH_URL: "https://auth.cloud.ovh.net/v3"
+      OS_IDENTITY_API_VERSION: 3
+      OS_USER_DOMAIN_NAME: "Default"
+      OS_PROJECT_DOMAIN_NAME: "Default"
+      OS_TENANT_ID: ${{ vars.OS_TENANT_ID }}
+      OS_TENANT_NAME: ${{ vars.OS_TENANT_NAME }}
+      OS_USERNAME: ${{ secrets.OS_USERNAME }}
+      OS_PASSWORD: ${{ secrets.OS_PASSWORD }}
+      OS_REGION_NAME: ${{ vars.OS_REGION_NAME }}
+      OVH_ENDPOINT: ${{ vars.OVH_ENDPOINT }}
+      OVH_APPLICATION_KEY: ${{ secrets.OVH_APPLICATION_KEY }}
+      OVH_APPLICATION_SECRET: ${{ secrets.OVH_APPLICATION_SECRET }}
+      OVH_CONSUMER_KEY: ${{ secrets.OVH_CONSUMER_KEY }}
+      OVH_CLOUD_PROJECT_SERVICE: ${{ vars.OS_TENANT_ID }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: ${{ vars.AWS_ENDPOINT_URL_S3 }}
+      AWS_S3_MEDIA_REPO_ENDPOINT: ${{ vars.AWS_S3_MEDIA_REPO_ENDPOINT }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.*
+
+      - name: Terraform Init
+        run: |
+          ./scripts/generate_provisioning_var_files.sh
+          cd terraform && terraform init -backend-config="bucket=terraform-states-hp-develop"
+
+      - name: Kube config
+        run: |
+          ./scripts/generate_configuration_var_files.sh
+
+      - name: Scan all image to get sarif reports
+        env:
+          TRIVY_VERSION: 0.50.1
+        run: |
+          export KUBECONFIG=$PWD/local/kubeconfig.yml
+          IMAGES=$(kubectl get pods --all-namespaces -o go-template --template="{{range .items}}{{range .spec.containers}}{{.image}} {{end}}{{end}}" | sort | tr " " "\n" | uniq)
+          mkdir -p sarif-reports
+          for IMAGE in $IMAGES; do
+            echo "Scanning image $IMAGE"
+            if [[ $IMAGE == *"registry.kubernatine.ovh"* ]]; then
+              echo "Skipping image $IMAGE"
+              continue
+            fi
+            SLUG=$(echo $IMAGE | tr ":" "_" | tr "/" "_")
+            docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
+            image --severity HIGH,CRITICAL --scanners vuln --format template --format sarif -o sarif-reports/report-$SLUG.sarif $IMAGE
+          done
+
+      - name: Merge sarif reports
+        run: |
+          mkdir -p sarif-report
+          npm i -g @microsoft/sarif-multitool@v4.5.4
+          npx @microsoft/sarif-multitool merge sarif-reports/*.sarif --recurse true --output-directory=sarif-report --output-file=MergedResult.sarif
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sarif-report/MergedResult.sarif
+          category: trivy
+
+      - name: Trivy Summary
+        env:
+          TRIVY_VERSION: 0.50.1
+        run: |
+          docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
+          k8s --kubeconfig /work/local/kubeconfig.yml --severity HIGH,CRITICAL --cache-dir /tmp/trivy/ -o trivy-summary.txt --report summary pod
+
+      - name: Trivy full report
+        env:
+          TRIVY_VERSION: 0.50.1
+        run: |
+          docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
+          k8s --kubeconfig /work/local/kubeconfig.yml --severity HIGH,CRITICAL --cache-dir /tmp/trivy/ -o trivy.txt --report all pod
+
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ vars.SMTP_HOST }}
+          server_port: 587
+          username: ${{ vars.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASS }}
+          subject: Vulnerability report
+          to: eimis@beta.gouv.fr
+          from: ${{ vars.SMTP_DISPLAY_NAME }} <${{ vars.SMTP_FROM }}>
+          body: "Hi,\nI checked develop environment for vulnerabilities, please find attached the trivy report.\n\nG00d luck,\n\n🤖"
+          attachments: trivy.txt, trivy-summary.txt
