@@ -11,9 +11,9 @@ output "floating_network_id" {
   value = data.openstack_networking_network_v2.ext_net.id
 }
 
-output "lb_floating_ip" {
-  description = "the floating ip of the load balancer"
-  value       = openstack_networking_floatingip_v2.lb_fip.address
+output "external_lb_ip" {
+  description = "the external ip of the load balancer, depending on the environment"
+  value       = local.external_lb_ip
 }
 
 output "clusterid" {

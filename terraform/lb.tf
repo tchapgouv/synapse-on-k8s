@@ -1,6 +1,10 @@
 resource "openstack_lb_loadbalancer_v2" "k8s_lb" {
   name          = "${var.env_name} load balancer"
+  loadbalancer_provider = "amphora"
   vip_subnet_id = openstack_networking_subnet_v2.subnet.id
+  depends_on = [
+    ovh_cloud_project_kube_nodepool.node_pool
+  ]
 }
 
 resource "openstack_lb_listener_v2" "websecure_listener" {
@@ -41,16 +45,14 @@ resource "openstack_lb_monitor_v2" "monitor" {
 }
 
 resource "openstack_networking_floatingip_v2" "lb_fip" {
+  count       = var.env_name != "production" ? 1 : 0
   pool        = "Ext-Net"
   description = "${var.env_name} floating IP"
-
-  depends_on = [
-    openstack_lb_loadbalancer_v2.k8s_lb
-  ]
 }
 
 resource "openstack_networking_floatingip_associate_v2" "lb1" {
-  floating_ip = openstack_networking_floatingip_v2.lb_fip.address
+  count       = var.env_name != "production" ? 1 : 0
+  floating_ip = openstack_networking_floatingip_v2.lb_fip[0].address
   port_id     = openstack_lb_loadbalancer_v2.k8s_lb.vip_port_id
 }
 
@@ -68,4 +70,8 @@ resource "openstack_lb_member_v2" "lb_member_web" {
   pool_id       = openstack_lb_pool_v2.web_pool.id
   address       = local.nodes_ips[count.index]
   protocol_port = var.ingress_service_port_web
+}
+
+locals {
+  external_lb_ip = var.env_name != "production" ? openstack_networking_floatingip_v2.lb_fip[0].address : openstack_lb_loadbalancer_v2.k8s_lb.vip_address
 }

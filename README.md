@@ -53,7 +53,7 @@ and fill it with all the environment variables values needed.
 Add a DNS entry to the domain name pointing to the load balancer IP address:
 
 ```bash
-terraform output lb_floating_ip
+terraform output external_lb_ip
 ```
 
 ## Configuration
