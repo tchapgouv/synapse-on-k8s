@@ -78,7 +78,17 @@ variable "s3_media_repo_endpoint" {
   type        = string
 }
 
-variable "ingress_service_port" {
-  description = "Port of the ingress service. Entrypoint of the cluster for the octavia LB"
+variable "ingress_service_port_web" {
+  description = "Port of the ingress service 80 Entrypoint of the cluster for the octavia LB"
   type        = string
+}
+variable "ingress_service_port_websecure" {
+  description = "Port of the ingress service 443 Entrypoint of the cluster for the octavia LB"
+  type        = string
+}
+
+variable "nodes_ips" {
+  description = "List of the nodes IPs"
+  type        = list(string)
+  default     = []
 }

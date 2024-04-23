@@ -48,8 +48,27 @@ and fill it with all the environment variables values needed.
     ```
   This will lead to the creation of a kubernetes cluster with 1 control plane node and several worker nodes
 
+## DNS entry
+
+Add a DNS entry to the domain name pointing to the load balancer IP address:
+
+```bash
+terraform output lb_floating_ip
+```
+
+## Load balancer member workaround
+
+It's not straightforward to get ip nodes. It can be retrieved with the following command :
+
+```bash
+openstack port list --network ${ENVIRONMENT}-private-network --format json | jq -r '.[] | select(.Name | startswith("private-port"))' | jq -r '."Fixed IP Addresses"[0].ip_address'
+```
+
+Then you can complete `NODES_IPS` environment var and do the terraform apply again.
+
 ## Configuration
-The configuration part will be done with Ansible and is quite independant
+
+The configuration part will be done with Ansible and is quite independent
 from the provisioning part.  
 - Generate the files (kubeconfig.yml, ansible/group_vars/all.yml) and vars needed :
   ```bash

@@ -349,11 +349,12 @@ spec:
     - IPv4
   ipFamilyPolicy: SingleStack
   ports:
-    # - appProtocol: http
-    #   name: http
-    #   port: 80
-    #   protocol: TCP
-    #   targetPort: http
+    - appProtocol: http
+      name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+      nodePort: 30696
     - appProtocol: https
       name: https
       port: 443

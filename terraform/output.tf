@@ -81,3 +81,8 @@ output "s3_media_repo_url" {
   description = "the url of the s3 media repo"
   value       = "https://${aws_s3_bucket.media_repo_bucket.bucket}.${var.s3_media_repo_endpoint}/"
 }
+
+output "lb_floating_ip" {
+  description = "the floating ip of the load balancer"
+  value       = openstack_networking_floatingip_v2.lb_fip.address
+}

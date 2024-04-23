@@ -43,7 +43,8 @@ export AWS_REGION="<the OVH s3 region>"
 # variables used by infrastructure components
 export ENV_IN_URL="<part of the URL that will be specific for each environment>"
 export CLUSTER_VERSION="<kubernetes version of the cluster: 1.23, 1.24, ...>"
-export INGRESS_SERVICE_PORT="<port of the ingress NodePort service e.g. 30695>"
+export INGRESS_SERVICE_PORT_WEBSECURE="<port of the ingress NodePort service e.g. 30695 for https>"
+export INGRESS_SERVICE_PORT_WEB="<port of the ingress NodePort service e.g. 30696 for http>"
 export NODEPOOL_FLAVOR="<flavor set to each node : b2-7, b2-15, R2-30, ...>"
 export DESIRED_NODES_NUM="<Desired number of kubernetes nodes>"
 export MAX_NODES_NUM="<Maximum number of kubernetes nodes>"
@@ -104,3 +105,5 @@ export KEYCLOAK_IMAGE_TAG="<docker image tag>"
 export KEYCLOAK_SUBDOMAIN_NAME="<keycloak url : KEYCLOAK_SUBDOMAIN_NAME.ENV_IN_URL.DNS_ZONE>"
 export KEYCLOAK_CLIENT_ID="<client ID used by keycloak to identify synapse client>"
 export KEYCLOAK_CLIENT_SECRET="<secret used in conjunction with client ID to identify synapse client>"
+
+export NODES_IPS = []
