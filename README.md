@@ -48,14 +48,6 @@ and fill it with all the environment variables values needed.
     ```
   This will lead to the creation of a kubernetes cluster with 1 control plane node and several worker nodes
 
-## DNS entry
-
-Add a DNS entry to the domain name pointing to the load balancer IP address:
-
-```bash
-terraform output external_lb_ip
-```
-
 ## Configuration
 
 The configuration part will be done with Ansible and is quite independent
