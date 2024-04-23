@@ -56,16 +56,6 @@ Add a DNS entry to the domain name pointing to the load balancer IP address:
 terraform output lb_floating_ip
 ```
 
-## Load balancer member workaround
-
-It's not straightforward to get ip nodes. It can be retrieved with the following command :
-
-```bash
-openstack port list --network ${ENVIRONMENT}-private-network --format json | jq -r '.[] | select(.Name | startswith("private-port"))' | jq -r '."Fixed IP Addresses"[0].ip_address'
-```
-
-Then you can complete `NODES_IPS` environment var and do the terraform apply again.
-
 ## Configuration
 
 The configuration part will be done with Ansible and is quite independent

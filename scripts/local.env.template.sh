@@ -105,5 +105,3 @@ export KEYCLOAK_IMAGE_TAG="<docker image tag>"
 export KEYCLOAK_SUBDOMAIN_NAME="<keycloak url : KEYCLOAK_SUBDOMAIN_NAME.ENV_IN_URL.DNS_ZONE>"
 export KEYCLOAK_CLIENT_ID="<client ID used by keycloak to identify synapse client>"
 export KEYCLOAK_CLIENT_SECRET="<secret used in conjunction with client ID to identify synapse client>"
-
-export NODES_IPS = []

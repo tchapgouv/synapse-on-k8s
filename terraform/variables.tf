@@ -123,9 +123,3 @@ variable "ingress_service_port_websecure" {
   description = "Port of the ingress service 443 Entrypoint of the cluster for the octavia LB"
   type        = string
 }
-
-variable "nodes_ips" {
-  description = "List of the nodes IPs"
-  type        = list(string)
-  default     = []
-}
