@@ -61,13 +61,11 @@ env:
   SYNAPSE_DB_USER: ${{ vars.SYNAPSE_DB_USER }}
   # App Network configuration
   APP_VLAN_NAME: ${{ vars.APP_VLAN_NAME }}
-  #  APP_VLAN_ID: ${{ vars.APP_VLAN_ID }}
   APP_VLAN_CIDR: ${{ vars.APP_VLAN_CIDR }}
   APP_VLAN_GATEWAY: ${{ vars.APP_VLAN_GATEWAY }}
   APP_VLAN_DNS: ${{ vars.APP_VLAN_DNS }}
   # Admin Network configuration
   ADMIN_VLAN_NAME: ${{ vars.ADMIN_VLAN_NAME }}
-  #  ADMIN_VLAN_ID: ${{ vars.ADMIN_VLAN_ID }}
   ADMIN_VLAN_CIDR: ${{ vars.ADMIN_VLAN_CIDR }}
   ADMIN_VLAN_GATEWAY: ${{ vars.ADMIN_VLAN_GATEWAY }}
   ADMIN_VLAN_DNS: ${{ vars.ADMIN_VLAN_DNS }}

@@ -56,7 +56,19 @@ export DATABASE_VERSION="<Version of postgresql>"
 export DATABASE_PLAN="<OVH plan for database : essential = 1 nodes, business = 2 nodes, enterprise = 3 nodes>"
 export DATABASE_FLAVOR="<OVH flavor of the VM on which the database is installed : db1-4, db1-7, db1-15, db1-30, ...>"
 export DATABASE_DISK_SIZE="<Size of the disk for the database VM>"
-export VLAN_CIDR="<Range of IP for the private network e.g. 192.168.30>"
+
+# App Network configuration
+export APP_VLAN_NAME="${ENVIRONMENT}-app-network"
+export APP_VLAN_CIDR="<Sets the CIDR block for the application VLAN e.g. 192.168.20.0/24>"
+export APP_VLAN_GATEWAY="<Sets the gateway IP for the application VLAN e.g. 192.168.20.1>"
+export APP_VLAN_DNS="<Sets the DNS servers for the application VLAN e.g. \"1.1.1.1\",\"1.0.0.1\">"
+
+# Admin Network configuration
+export ADMIN_VLAN_NAME="${ENVIRONMENT}-admin-network"
+export ADMIN_VLAN_CIDR="<Sets the CIDR block for the admin VLAN e.g. 192.168.100.0/24>"
+export ADMIN_VLAN_GATEWAY="<Sets the gateway IP for the admin VLAN e.g. 192.168.100.1>"
+export ADMIN_VLAN_DNS="<Sets the DNS servers for the admin VLAN e.g. \"1.1.1.1\",\"1.0.0.1\>"
+
 # variables used by matrix components
 export SERVER_SUBDOMAIN_NAME="<the matrix serverName will be : SERVER_SUBDOMAIN_NAME.ENV_IN_URL.DNS_ZONE>"
 export ELEMENT_SUBDOMAIN_NAME="<the front-end url will be : ELEMENT_SUBDOMAIN_NAME.ENV_IN_URL.DNS_ZONE>"
