@@ -65,13 +65,13 @@ This will lead to the installation of the following components in the cluster :
 - basic components :
   - an ingress controller
   - a certificate manager
-  - a component that manage dns zone on OVH
 - components specific to our stack :
-  - a keycloak instance along with it's operator
+  - a keycloak instance along with its operator
   - the synapse stack and its customization
   - the element-web stack
   - the stunner stack used to facilitate audio/video on element
   - a prometheus/grafana stack for monitoring
+  - an alpha unofficial version of a MS teams bridge 
 
 ## Other credits
 
