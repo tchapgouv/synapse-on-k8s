@@ -2,6 +2,13 @@ image:
   repository: eimisans/synapse
   tag: {{ matrix.image_tag }}
 synapse:
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
   strategy:
     type: Recreate
   annotations:
@@ -50,6 +57,13 @@ ingress:
       secretName: "matrix-tls-secret"
 wellknown:
   enabled: true
+  resources:
+   limits:
+     cpu: 5m
+     memory: 15Mi
+   requests:
+     cpu: 5m
+     memory: 15Mi
 extraConfig:
   allow_public_rooms_over_federation: true
   enable_registration_without_verification: false

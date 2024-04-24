@@ -8,6 +8,13 @@ metadata:
 spec:
   instances: 1
   image: eimisans/eimis-keycloak:{{ keycloak.image_tag }}
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
   hostname:
     hostname: "{{ keycloak.server_name }}"
     strict: false

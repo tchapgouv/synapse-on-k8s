@@ -6,17 +6,17 @@ ovh:
   consumer_key: ${OVH_CONSUMER_KEY}
 dns_zone: ${DNS_ZONE}
 ingress_controller:
-  version: "4.9.0"
+  version: "4.10.0"
 cert_manager:
-  version: "1.13.3"
+  version: "1.14.4"
   issuer_mail: ${ISSUER_MAIL}
 external_dns:
-  version: "v0.14.0"
+  version: "v0.14.1"
   registry_id: ${ENVIRONMENT}
 keycloak:
   server_name: ${KEYCLOAK_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
   image_tag: ${KEYCLOAK_IMAGE_TAG}
-  operator_version : 23.0.3
+  operator_version : 24.0.3
   db_user: "keycloak"
   db_password: ${KEYCLOAK_DB_PASSWORD}
   db_avnadmin_password: ${KEYCLOAK_DB_AVNADMIN_PASSWORD}
@@ -34,7 +34,7 @@ prosante_connect:
   client_id: ${PROSANTE_CONNECT_CLIENT_ID}
   client_secret: ${PROSANTE_CONNECT_CLIENT_SECRET}
 matrix:
-  chart_version: "3.7.14"
+  chart_version: "3.9.1"
   image_tag: ${SYNAPSE_IMAGE_TAG}
   server_name: ${SERVER_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
   smtp_host: ${SMTP_HOST}
@@ -67,7 +67,7 @@ matrix:
     access_key: ${S3_MEDIA_REPO_ACCESS_KEY}
     secret_key: ${S3_MEDIA_REPO_SECRET_KEY}
 element:
-  chart_version: "1.3.9"
+  chart_version: "1.3.20"
   server_name: ${ELEMENT_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
 msteams:
   enabled: ${TEAMS_BRIDGE_ENABLED}
@@ -80,7 +80,7 @@ stunner:
   chart_version: "v0.17.0"
   shared_secret: ${STUNNER_SHARED_SECRET}
 monitoring:
-  chart_version: "55.5.0"
+  chart_version: "58.1.3"
   kube_prometheus_git_url: "https://github.com/prometheus-operator/kube-prometheus.git"
   server_name: ${MONITORING_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
   grafana_password: ${MONITORING_GRAFANA_PASSWORD}

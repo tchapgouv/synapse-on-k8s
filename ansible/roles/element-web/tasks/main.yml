@@ -18,6 +18,13 @@
         add_header Content-Security-Policy "frame-ancestors 'self'";
       config:
         logout_redirect_url: "https://{{ keycloak.server_name }}/realms/eimis-realm/protocol/openid-connect/logout?post_logout_redirect_uri=https://{{ element.server_name }}&client_id={{ keycloak.client_id }}"
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
       ingress:
         enabled: true
         className: nginx
