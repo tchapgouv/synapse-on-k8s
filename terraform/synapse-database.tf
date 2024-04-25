@@ -25,10 +25,10 @@ resource "ovh_cloud_project_database" "pg_database" {
       subnet_id  = openstack_networking_subnet_v2.subnet.id
     }
   }
-    ip_restrictions {
-      description = "Ip access restricted to ${var.env_name} app network"
-      ip = var.app_vlan_cidr
-    }
+  ip_restrictions {
+    description = "Ip access restricted to ${var.env_name} app network"
+    ip          = var.app_vlan_cidr
+  }
 }
 
 resource "ovh_cloud_project_database_postgresql_user" "synapse" {
