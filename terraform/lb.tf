@@ -75,6 +75,5 @@ resource "openstack_lb_member_v2" "lb_member_web" {
 }
 
 locals {
-  external_lb_ip = var.env_name != "production" ? openstack_networking_floatingip_v2.lb_fip[0].address :
-    openstack_lb_loadbalancer_v2.k8s_lb.vip_address
+  external_lb_ip = var.env_name != "production" ? openstack_networking_floatingip_v2.lb_fip[0].address : openstack_lb_loadbalancer_v2.k8s_lb.vip_address
 }
