@@ -5,7 +5,7 @@
 # Ex: Develop environment have its own dns zone (develop.eimis.incubateur.net)
 #   so its base_url is "develop.eimis.incubateur.net" with "*" subdomain
 locals {
-  subdomain = contains(var.env_with_own_dns_zone, var.env_name) ? "*" :  "*.${var.env_in_url}"
+  subdomain = contains(var.env_with_own_dns_zone, var.env_name) ? "*" : "*.${var.env_in_url}"
   base_url  = contains(var.env_with_own_dns_zone, var.env_name) ? var.dns_zone : "${var.env_in_url}.${var.dns_zone}"
 }
 
