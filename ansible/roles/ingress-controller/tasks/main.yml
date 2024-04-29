@@ -1,17 +1,7 @@
----
-- name: Add ingress-nginx helm repository
-  kubernetes.core.helm_repository:
-    name: ingress-nginx
-    repo_url: "https://kubernetes.github.io/ingress-nginx"
-
-- name: install ingress-nginx helm chart
-  kubernetes.core.helm:
-    name: ingress-nginx
-    chart_ref: ingress-nginx/ingress-nginx
-    chart_version: "{{ ingress_controller.version }}"
-    release_namespace: ingress-nginx
-    create_namespace: true
-    update_repo_cache: yes
+- name: Add ingress-nginx controller
+  kubernetes.core.k8s:
+    state: present
+    template: "ingress-nginx.yml"
 
 - name: Get the ingress-controller external IP
   kubernetes.core.k8s_info:
@@ -20,10 +10,6 @@
     name: ingress-nginx-controller
     namespace: ingress-nginx
   register: ingress_controller_service
-  until: ingress_controller_service.resources[0].status.loadBalancer.ingress[0].ip is defined
+  until: ingress_controller_service.resources[0].spec.ports[0].nodePort is defined
   retries: 10
   delay: 10
-
-- name: "DEBUG ingress-controller external IP"
-  debug:
-    msg: "{{ ingress_controller_service.resources[0].status.loadBalancer.ingress[0].ip }}"

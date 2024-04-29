@@ -1,30 +1,55 @@
 output "kubeconfig" {
-  value     = ovh_cloud_project_kube.k8s_element_cluster.kubeconfig
-  sensitive = true
+  description = "Kubeconfig for the created Kubernetes cluster"
+  value       = ovh_cloud_project_kube.k8s_element_cluster.kubeconfig
+  sensitive   = true
+}
+
+output "app_subnet_id" {
+  description = "ID of the subnet for the application"
+  value       = openstack_networking_subnet_v2.subnet.id
+}
+
+output "floating_network_id" {
+  description = "ID of the floating network"
+  value       = data.openstack_networking_network_v2.ext_net.id
+}
+
+output "external_lb_ip" {
+  description = "The external IP of the load balancer, depending on the environment"
+  value       = local.external_lb_ip
 }
 
 output "clusterid" {
-  value = ovh_cloud_project_kube.k8s_element_cluster.id
+  description = "ID of the Kubernetes cluster"
+  value       = ovh_cloud_project_kube.k8s_element_cluster.id
+}
+
+output "cluster_name" {
+  description = "Name of the Kubernetes cluster"
+  value       = ovh_cloud_project_kube.k8s_element_cluster.name
 }
 
 output "synapse_db_password" {
-  value     = ovh_cloud_project_database_postgresql_user.synapse.password
-  sensitive = true
+  description = "Password for the Synapse database user"
+  value       = ovh_cloud_project_database_postgresql_user.synapse.password
+  sensitive   = true
 }
 
 output "avnadmin_db_password" {
-  value     = ovh_cloud_project_database_postgresql_user.avnadmin.password
-  sensitive = true
+  description = "Password for the avnadmin database user"
+  value       = ovh_cloud_project_database_postgresql_user.avnadmin.password
+  sensitive   = true
 }
 
 output "synapse_db_host" {
-  value     = ovh_cloud_project_database.pg_database.endpoints[0].domain
-  sensitive = true
+  description = "Host for the Synapse database"
+  value       = ovh_cloud_project_database.pg_database.endpoints[0].domain
 }
 
 output "synapse_db_port" {
-  value     = ovh_cloud_project_database.pg_database.endpoints[0].port
-  sensitive = true
+  description = "keycloak database user password"
+  value       = ovh_cloud_project_database.pg_database.endpoints[0].port
+  sensitive   = true
 }
 
 output "avnadmin_keycloak_db_password" {
@@ -52,6 +77,7 @@ output "keycloak_db_port" {
 }
 
 output "synapse_databse_uri" {
+  description = "URI for Synapse database"
   value = join("", [
     "postgres://", ovh_cloud_project_database_postgresql_user.synapse.name, ":",
     ovh_cloud_project_database_postgresql_user.synapse.password, "@",

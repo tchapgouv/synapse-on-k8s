@@ -44,6 +44,8 @@ env:
   # variables used by infrastructure components
   ENV_IN_URL: ${{vars.ENV_IN_URL}}
   CLUSTER_VERSION: ${{ vars.CLUSTER_VERSION }}
+  INGRESS_SERVICE_PORT_WEB: ${{ vars.INGRESS_SERVICE_PORT_WEB }}
+  INGRESS_SERVICE_PORT_WEBSECURE: ${{ vars.INGRESS_SERVICE_PORT_WEBSECURE }}
   NODEPOOL_FLAVOR: ${{ vars.NODEPOOL_FLAVOR }}
   DESIRED_NODES_NUM: ${{ vars.DESIRED_NODES_NUM }}
   MAX_NODES_NUM: ${{ vars.MAX_NODES_NUM }}
@@ -57,7 +59,16 @@ env:
   DATABASE_DISK_SIZE: ${{ vars.DATABASE_DISK_SIZE }}
   SYNAPSE_DB_INSTANCE_NAME: ${{ vars.SYNAPSE_DB_INSTANCE_NAME }}
   SYNAPSE_DB_USER: ${{ vars.SYNAPSE_DB_USER }}
-  VLAN_CIDR: ${{ vars.VLAN_CIDR }}
+  # App Network configuration
+  APP_VLAN_NAME: ${{ vars.APP_VLAN_NAME }}
+  APP_VLAN_CIDR: ${{ vars.APP_VLAN_CIDR }}
+  APP_VLAN_GATEWAY: ${{ vars.APP_VLAN_GATEWAY }}
+  APP_VLAN_DNS: ${{ vars.APP_VLAN_DNS }}
+  # Admin Network configuration
+  ADMIN_VLAN_NAME: ${{ vars.ADMIN_VLAN_NAME }}
+  ADMIN_VLAN_CIDR: ${{ vars.ADMIN_VLAN_CIDR }}
+  ADMIN_VLAN_GATEWAY: ${{ vars.ADMIN_VLAN_GATEWAY }}
+  ADMIN_VLAN_DNS: ${{ vars.ADMIN_VLAN_DNS }}
   # variables used by matrix components
   SERVER_SUBDOMAIN_NAME: ${{ vars.SERVER_SUBDOMAIN_NAME }}
   ELEMENT_SUBDOMAIN_NAME: ${{ vars.ELEMENT_SUBDOMAIN_NAME }}

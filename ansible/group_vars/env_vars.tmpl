@@ -7,12 +7,11 @@ ovh:
 dns_zone: ${DNS_ZONE}
 ingress_controller:
   version: "4.10.0"
+  node_port_web: ${INGRESS_SERVICE_PORT_WEB}
+  node_port_websecure: ${INGRESS_SERVICE_PORT_WEBSECURE}
 cert_manager:
   version: "1.14.4"
   issuer_mail: ${ISSUER_MAIL}
-external_dns:
-  version: "v0.14.1"
-  registry_id: ${ENVIRONMENT}
 keycloak:
   server_name: ${KEYCLOAK_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
   image_tag: ${KEYCLOAK_IMAGE_TAG}

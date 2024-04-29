@@ -49,7 +49,8 @@ and fill it with all the environment variables values needed.
   This will lead to the creation of a kubernetes cluster with 1 control plane node and several worker nodes
 
 ## Configuration
-The configuration part will be done with Ansible and is quite independant
+
+The configuration part will be done with Ansible and is quite independent
 from the provisioning part.  
 - Generate the files (kubeconfig.yml, ansible/group_vars/all.yml) and vars needed :
   ```bash
@@ -64,13 +65,13 @@ This will lead to the installation of the following components in the cluster :
 - basic components :
   - an ingress controller
   - a certificate manager
-  - a component that manage dns zone on OVH
 - components specific to our stack :
-  - a keycloak instance along with it's operator
+  - a keycloak instance along with its operator
   - the synapse stack and its customization
   - the element-web stack
   - the stunner stack used to facilitate audio/video on element
   - a prometheus/grafana stack for monitoring
+  - an alpha unofficial version of a MS teams bridge 
 
 ## Other credits
 

@@ -12,10 +12,6 @@
     - keycloak
     - teams-bridge
   tasks:
-    - name: Wait for 60 seconds so that external-dns has correctly unregistered the different ingresses
-      ansible.builtin.wait_for:
-        timeout: 60
-      when: absent_or_present=="absent"
     - name: delete remaining secret - signingkey
       kubernetes.core.k8s:
         state: "{{ absent_or_present }}"
