@@ -107,3 +107,8 @@ output "s3_media_repo_url" {
   description = "the url of the s3 media repo"
   value       = "https://${aws_s3_bucket.media_repo_bucket.bucket}.${var.s3_media_repo_endpoint}/"
 }
+
+output "base_url" {
+  description = "Base URL of the environment"
+  value       = local.base_url
+}

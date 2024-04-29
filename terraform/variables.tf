@@ -133,3 +133,9 @@ variable "env_in_url" {
   description = "subdmain of the DNS zone that will be updated"
   type        = string
 }
+
+variable "env_with_own_dns_zone" {
+  description = "list of environments that have their own dns_zone"
+  type        = list(string)
+  default     = ["production", "preprod", "develop"]
+}
