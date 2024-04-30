@@ -11,7 +11,7 @@ locals {
 
 # Add a record with wildcard to the DNS zone
 resource "ovh_domain_zone_record" "dns_record_update" {
-#   count     = var.env_name != "production" ? 1 : 0
+  #   count     = var.env_name != "production" ? 1 : 0
   zone      = var.dns_zone
   subdomain = local.subdomain
   fieldtype = "A"
