@@ -6,6 +6,8 @@ metadata:
   namespace: default
 data:
   extraconfig.yaml: |
+    password_config:
+      enabled: {{ matrix.password_config }}
 {% if discovery_room_id is defined %}
     # Those rooms will be hidden from users
     exclude_rooms_from_sync:
