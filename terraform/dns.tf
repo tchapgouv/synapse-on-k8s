@@ -9,9 +9,9 @@ locals {
   base_url  = contains(var.env_with_own_dns_zone, var.env_name) ? var.dns_zone : "${var.env_in_url}.${var.dns_zone}"
 }
 
-# Add a record with wildcard to the DNS zone for non production environment
+# Add a record with wildcard to the DNS zone
 resource "ovh_domain_zone_record" "dns_record_update" {
-  count     = var.env_name != "production" ? 1 : 0
+#   count     = var.env_name != "production" ? 1 : 0
   zone      = var.dns_zone
   subdomain = local.subdomain
   fieldtype = "A"
