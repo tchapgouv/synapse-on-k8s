@@ -19,9 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: If after develop push, wait 15 minutes for deployment
-        uses: juliangruber/sleep-action@v2.0.0
-        with:
-          time: 15m
+        run: sleep 900
 
   trivy-report:
     name: "Trivy report on develop environment"
