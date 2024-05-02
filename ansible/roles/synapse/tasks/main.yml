@@ -8,6 +8,21 @@
     name: ananace-charts
     repo_url: "https://ananace.gitlab.io/charts"
 
+- name: Is synapse already running?
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    name: matrix-synapse
+    namespace: default
+  register: synapse_deployment
+
+- name: Get replicaset number
+  set_fact:
+    synapse_was_already_running: "{{ synapse_deployment.resources[0].status.replicas | default(0) }}"
+
+- name: Display synapse status
+  debug:
+    var: synapse_was_already_running
+
 - name: matrix-synapse helm chart
   kubernetes.core.helm:
     name: matrix-synapse
@@ -17,14 +32,6 @@
     release_namespace: default
     values: "{{ lookup('template', 'synapse-chart-config.j2') | from_yaml }}"
     update_repo_cache: yes
-
-- name: wait for the matrix-synapse replicaset to be ready
-  shell: 'kubectl get deployments.apps matrix-synapse -o jsonpath="{$.status.conditions}" |jq ''.[] | select(.reason | test("NewReplicaSetAvailable")).message'''
-  register: rs_message
-  until: rs_message.stdout.find("successfully") != -1
-  retries: 30
-  delay: 5
-  when: absent_or_present=="present"
 
 - name: Wait for the synapse instance to be up and running
   ansible.builtin.uri:

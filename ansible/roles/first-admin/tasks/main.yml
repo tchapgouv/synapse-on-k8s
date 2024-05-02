@@ -3,51 +3,54 @@
 # Role used to create the first admin user
 # the admin_access_token is registered and user in later roles
 #
-- name: first user creation - retrieve registration_shared_secret
-  shell: "kubectl get secrets matrix-synapse -o jsonpath=\"{$.data.config\\.yaml}\" | base64 -d | yq -r \".registration_shared_secret\""
-  register: registration_shared_secret
+- block:
+    - name: first user creation - retrieve registration_shared_secret
+      shell: "kubectl get secrets matrix-synapse -o jsonpath=\"{$.data.config\\.yaml}\" | base64 -d | yq -r \".registration_shared_secret\""
+      register: registration_shared_secret
 
-- name: first user creation - get a nonce
-  ansible.builtin.uri:
-    url: "https://{{ matrix.server_name }}/_synapse/admin/v1/register"
-  register: nonce
+    - name: first user creation - get a nonce
+      ansible.builtin.uri:
+        url: "https://{{ matrix.server_name }}/_synapse/admin/v1/register"
+      register: nonce
 
-- name: first user creation - generate hmac
-  ansible.builtin.shell: |
-    nonce='{{ nonce.json.nonce }}'
-    username='{{ matrix.first_eimis_username }}'
-    password='{{ matrix.first_eimis_password }}'
-    admin='admin'
-    secret='{{ registration_shared_secret.stdout }}'
-    printf '%s\0%s\0%s\0%s' "$nonce" "$username" "$password" "$admin" |
-    openssl dgst -sha1 -hmac "$secret" |
-    awk '{print $2}'
-  register: hmac
+    - name: first user creation - generate hmac
+      ansible.builtin.shell: |
+        nonce='{{ nonce.json.nonce }}'
+        username='{{ matrix.first_eimis_username }}'
+        password='{{ matrix.first_eimis_password }}'
+        admin='admin'
+        secret='{{ registration_shared_secret.stdout }}'
+        printf '%s\0%s\0%s\0%s' "$nonce" "$username" "$password" "$admin" |
+        openssl dgst -sha1 -hmac "$secret" |
+        awk '{print $2}'
+      register: hmac
 
-- name: first user creation - try to login and get access-token
-  ansible.builtin.uri:
-    url: "https://{{ matrix.server_name }}/_matrix/client/v3/login"
-    method: POST
-    body: "{{ lookup('template', 'login.json') }}"
-    body_format: json
-  register: login_intent
-  ignore_errors: true
+    - name: first user creation - try to login and get access-token
+      ansible.builtin.uri:
+        url: "https://{{ matrix.server_name }}/_matrix/client/v3/login"
+        method: POST
+        body: "{{ lookup('template', 'login.json') }}"
+        body_format: json
+      register: login_intent
+      ignore_errors: true
 
-- name: first user creation - set access-token var
-  set_fact:
-    admin_access_token: "{{ login_intent.json.access_token }}"
-  when: login_intent.status==200
+    - name: first user creation - set access-token var
+      set_fact:
+        admin_access_token: "{{ login_intent.json.access_token }}"
+      when: login_intent.status==200
 
-- name: first user creation - register user with synapse API and get access-token, only executed if login failed
-  ansible.builtin.uri:
-    url: "https://{{ matrix.server_name }}/_synapse/admin/v1/register"
-    method: POST
-    body: "{{ lookup('template', 'register.json') }}"
-    body_format: json
-  register: register_intent
-  when: login_intent.status!=200
+    - name: first user creation - register user with synapse API and get access-token, only executed if login failed
+      ansible.builtin.uri:
+        url: "https://{{ matrix.server_name }}/_synapse/admin/v1/register"
+        method: POST
+        body: "{{ lookup('template', 'register.json') }}"
+        body_format: json
+      register: register_intent
+      when: login_intent.status!=200
 
-- name: first user creation - set admin_access_token var
-  set_fact:
-    admin_access_token: "{{ register_intent.json.access_token }}"
-  when: login_intent.status!=200
+    - name: first user creation - set admin_access_token var
+      set_fact:
+        admin_access_token: "{{ register_intent.json.access_token }}"
+      when: login_intent.status!=200
+
+  when: synapse_was_already_running == "0"

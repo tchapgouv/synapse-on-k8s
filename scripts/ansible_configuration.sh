@@ -9,8 +9,13 @@
 export WORKING_DIRECTORY=$(pwd)
 echo "WORKING_DIRECTORY=${WORKING_DIRECTORY}"
 export ANSIBLE_ROOT="${WORKING_DIRECTORY}/ansible"
-export KUBECONFIG="${WORKING_DIRECTORY}/local/kubeconfig.yml"
+export KUBECONFIG="${WORKING_DIRECTORY}/local/kubeconfig-${ENVIRONMENT}.yml"
 echo "KUBECONFIG=${KUBECONFIG}"
+
+if [ "$RESET_SYNAPSE_DEPLOYMENT" = true ]; then
+    echo "--- remove synapse deployment ---"
+    "${WORKING_DIRECTORY}/scripts/remove_synapse_deployment.sh"
+fi
 
 cd $ANSIBLE_ROOT
 
