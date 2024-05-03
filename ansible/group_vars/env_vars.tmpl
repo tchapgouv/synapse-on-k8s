@@ -13,7 +13,7 @@ cert_manager:
   version: "1.14.4"
   issuer_mail: ${ISSUER_MAIL}
 keycloak:
-  server_name: ${KEYCLOAK_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
+  server_name: ${KEYCLOAK_SUBDOMAIN_NAME}.${BASE_URL}
   image_tag: ${KEYCLOAK_IMAGE_TAG}
   operator_version : 24.0.3
   db_user: "keycloak"
@@ -35,10 +35,8 @@ prosante_connect:
 matrix:
   chart_version: "3.9.1"
   image_tag: ${SYNAPSE_IMAGE_TAG}
-  server_name: ${SERVER_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
+  server_name: ${SERVER_SUBDOMAIN_NAME}.${BASE_URL}
   smtp_host: ${SMTP_HOST}
-# FIXME smtp_port set with ansible variable is consider as string and not int
-#  smtp_port: ${SMTP_PORT}
   smtp_user: ${SMTP_USER}
   smtp_pass: ${SMTP_PASS}
   smtp_from: ${SMTP_FROM}
@@ -67,10 +65,10 @@ matrix:
     secret_key: ${S3_MEDIA_REPO_SECRET_KEY}
 element:
   chart_version: "1.3.20"
-  server_name: ${ELEMENT_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
+  server_name: ${ELEMENT_SUBDOMAIN_NAME}.${BASE_URL}
 msteams:
   enabled: ${TEAMS_BRIDGE_ENABLED}
-  server_name: ${TEAMS_BRIDGE_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
+  server_name: ${TEAMS_BRIDGE_SUBDOMAIN_NAME}.${BASE_URL}
   oauth:
     client_id: ${TEAMS_OAUTH_CLIENT_ID}
     client_secret: ${TEAMS_OAUTH_CLIENT_SECRET}
@@ -81,6 +79,6 @@ stunner:
 monitoring:
   chart_version: "58.1.3"
   kube_prometheus_git_url: "https://github.com/prometheus-operator/kube-prometheus.git"
-  server_name: ${MONITORING_SUBDOMAIN_NAME}.${ENV_IN_URL}.${DNS_ZONE}
+  server_name: ${MONITORING_SUBDOMAIN_NAME}.${BASE_URL}
   grafana_password: ${MONITORING_GRAFANA_PASSWORD}
   prometheus_volume_size: ${MONITORING_PROMETHEUS_VOLUME_SIZE}

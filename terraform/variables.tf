@@ -129,6 +129,12 @@ variable "dns_zone" {
   type        = string
 }
 
+variable "dns_zone_exclusive" {
+  description = "Indicates if the dns zone is exclusive to the environment or if it is shared with other environments"
+  type        = bool
+  default     = true
+}
+
 variable "env_in_url" {
   description = "subdmain of the DNS zone that will be updated"
   type        = string
