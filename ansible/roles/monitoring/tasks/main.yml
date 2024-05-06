@@ -18,32 +18,7 @@
     release_namespace: monitoring
     release_state: "{{ absent_or_present }}"
     create_namespace: true
-    release_values:
-      prometheus:
-        prometheusSpec:
-          serviceMonitorSelectorNilUsesHelmValues: false
-          storageSpec:
-            volumeClaimTemplate:
-              spec:
-                storageClassName: csi-cinder-classic
-                accessModes: ["ReadWriteOnce"]
-                resources:
-                  requests:
-                    storage: "{{ monitoring.prometheus_volume_size }}"
-      grafana:
-        adminPassword: "{{ monitoring.grafana_password }}"
-        defaultDashboardsTimezone: cest
-        ingress:
-          enabled: true
-          ingressClassName: nginx
-          annotations:
-            cert-manager.io/cluster-issuer: "letsencrypt-prod"
-          hosts:
-            - "{{ monitoring.server_name }}"
-          tls:
-            - hosts:
-                - "{{ monitoring.server_name }}"
-              secretName: "grafana-tls-secret"
+    values: "{{ lookup('template', 'kube-prometheus-chart-values.yml') | from_yaml }}"
     update_repo_cache: yes
 
 - name: Matrix-synapse service monitor

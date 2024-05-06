@@ -82,3 +82,7 @@ monitoring:
   server_name: ${MONITORING_SUBDOMAIN_NAME}.${BASE_URL}
   grafana_password: ${MONITORING_GRAFANA_PASSWORD}
   prometheus_volume_size: ${MONITORING_PROMETHEUS_VOLUME_SIZE}
+  alertmanager:
+    receivers:
+      zabbix_config: ${AM_ZABBIX_URL}
+      mail: ${AM_MAIL_RECEIVER}

@@ -1,0 +1,66 @@
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: csi-cinder-classic
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: "{{ monitoring.prometheus_volume_size }}"
+grafana:
+  adminPassword: "{{ monitoring.grafana_password }}"
+  defaultDashboardsTimezone: cest
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    hosts:
+      - "{{ monitoring.server_name }}"
+    tls:
+      - hosts:
+          - "{{ monitoring.server_name }}"
+        secretName: "grafana-tls-secret"
+alertmanager:
+  config:
+    global:
+      smtp_smarthost: '{{ matrix.smtp_host }}:587'
+      smtp_from: '{{ matrix.smtp_from }}'
+      smtp_auth_username: '{{ matrix.smtp_user }}'
+      smtp_auth_password: '{{ matrix.smtp_pass }}'
+      smtp_require_tls: true
+    route:
+      group_by: ['alertname']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: 'null'
+      routes:
+        - match:
+            zabbix: enabled
+          receiver: 'zabbix'
+          continue: true
+        - match:
+            zabbix: enabled
+          receiver: 'team_middle'
+          continue: true
+#        - matchers:
+#            - severity =~ "warning|critical"
+#          receiver: 'webhook_receiver'
+#          continue: true
+    receivers:
+      - name: 'null'
+      - name: 'zabbix'
+        webhook_configs:
+          - url: "{{monitoring.alertmanager.receivers.zabbix_config}}"
+      - name: 'team_middle'
+        email_configs:
+          - to: "{{monitoring.alertmanager.receivers.mail}}"
+#      - name: 'webhook_receiver'
+#        webhook_configs:
+#          - url: 'https://webhook.site/e2567458-cb9b-4800-9a74-117e80f924f8'
+#            send_resolved: false
+    templates:
+      - '/etc/alertmanager/config/*.tmpl'
