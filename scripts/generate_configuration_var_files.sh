@@ -5,17 +5,23 @@
 # - connexion to database from the output of terraform
 # - group_vars/all.yml needed by Ansible
 
-
-echo "Getting terraform outputs"
 LOCAL=../local
 (
     cd terraform
- 
+    echo "Getting terraform outputs"
+    echo "kubeconfig"
     terraform output --raw kubeconfig >$LOCAL/kubeconfig.yml
+    chmod 600 $LOCAL/kubeconfig.yml
+    echo "done."
+    echo "ssh private key"
+    terraform output --raw vm_admin_private_key > $LOCAL/ssh_private_key.pem
+    chmod 600 $LOCAL/ssh_private_key.pem
+    echo "done."
+    echo "Other outputs"
     terraform output -json >terraform_output.json
     echo "done."
 
-    chmod 600 $LOCAL/kubeconfig.yml
+
     export SYNAPSE_DATABASE_URL=$(jq -r ". | .\"synapse_databse_uri\".value" terraform_output.json)
     export SYNAPSE_DB_PASSWORD=$(jq -r ". | .\"synapse_db_password\".value" terraform_output.json)
     export SYNAPSE_DB_HOST=$(jq -r ". | .\"synapse_db_host\".value" terraform_output.json)
