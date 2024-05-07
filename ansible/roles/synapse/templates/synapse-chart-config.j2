@@ -58,6 +58,10 @@ wellknown:
    requests:
      cpu: 5m
      memory: 15Mi
+redis:
+  image:
+    repository: redis
+    tag: {{ matrix.redis_tag }}
 extraConfig:
   allow_public_rooms_over_federation: true
   enable_registration_without_verification: false
