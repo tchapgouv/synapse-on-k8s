@@ -16,9 +16,6 @@ synapse:
     prometheus.io/path: "/_synapse/metrics"
     prometheus.io/port: "9090"
   extraVolumes:
-    - name: s3-media-repo-module
-      configMap:
-        name: s3-media-repo-module
 {% if msteams.enabled %}
     - name: msteams-registration
       configMap:
@@ -26,8 +23,6 @@ synapse:
       items:
         - key: "msteams-registration.yaml"
           path: "msteams-registration.yaml"
-{% endif %}
-{% if msteams.enabled %}
     - name: msteams-registration
       mountPath: /synapse/config/appservices
 {% endif %}
@@ -63,6 +58,10 @@ wellknown:
    requests:
      cpu: 5m
      memory: 15Mi
+redis:
+  image:
+    repository: redis
+    tag: {{ matrix.redis_tag }}
 extraConfig:
   allow_public_rooms_over_federation: true
   enable_registration_without_verification: false

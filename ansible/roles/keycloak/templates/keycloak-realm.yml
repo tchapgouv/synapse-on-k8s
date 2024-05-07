@@ -24,6 +24,7 @@ spec:
     maxDeltaTimeSeconds: 43200
     failureFactor: 30
     passwordPolicy: "length(8) and notEmail(undefined) and upperCase(1) and lowerCase(1) and digits(1) and passwordHistory(3) and forceExpiredPasswordChange(365)"
+    resetPasswordAllowed: true
     clients:
       - clientId: "{{ keycloak.client_id }}"
         name: "synapsecret"
@@ -53,7 +54,7 @@ spec:
       ssl: "true"
       starttls: "true"
       user: "{{ matrix.smtp_user }}"
-    emailTheme: "email-code-theme"
+    emailTheme: "eimis-email"
     attributes:
       cibaAuthRequestedUserHint: login_hint
       cibaBackchannelTokenDeliveryMode: poll
