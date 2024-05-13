@@ -65,6 +65,7 @@ env:
   APP_VLAN_CIDR: ${{ vars.APP_VLAN_CIDR }}
   APP_VLAN_GATEWAY: ${{ vars.APP_VLAN_GATEWAY }}
   APP_VLAN_DNS: ${{ vars.APP_VLAN_DNS }}
+  APP_VLAN_LB_IP: ${{ vars.APP_VLAN_LB_IP }}
   # Admin Network configuration
   ADMIN_VLAN_NAME: ${{ vars.ADMIN_VLAN_NAME }}
   ADMIN_VLAN_CIDR: ${{ vars.ADMIN_VLAN_CIDR }}
