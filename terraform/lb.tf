@@ -35,15 +35,6 @@ resource "openstack_lb_pool_v2" "web_pool" {
   listener_id = openstack_lb_listener_v2.web_listener.id
 }
 
-resource "openstack_lb_monitor_v2" "monitor" {
-  name        = "${var.env_name} Api Monitor"
-  pool_id     = openstack_lb_pool_v2.websecure_pool.id
-  type        = "TCP"
-  delay       = 10
-  timeout     = 5
-  max_retries = 5
-}
-
 resource "openstack_networking_floatingip_v2" "lb_fip" {
   count       = var.env_name != "production" ? 1 : 0
   pool        = "Ext-Net"
