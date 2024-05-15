@@ -63,6 +63,7 @@ export APP_VLAN_NAME="${ENVIRONMENT}-app-network"
 export APP_VLAN_CIDR="<Sets the CIDR block for the application VLAN e.g. 192.168.20.0/24>"
 export APP_VLAN_GATEWAY="<Sets the gateway IP for the application VLAN e.g. 192.168.20.1>"
 export APP_VLAN_DNS="<Sets the DNS servers for the application VLAN e.g. \"1.1.1.1\",\"1.0.0.1\">"
+export APP_VLAN_LB_IP="<Optional: Sets the IP address for the LoadBalancer in the application VLAN e.g. 192.168.20.132>"
 
 # Admin Network configuration
 export ADMIN_VLAN_NAME="${ENVIRONMENT}-admin-network"

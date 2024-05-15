@@ -34,6 +34,12 @@ variable "app_vlan_cidr" {
   type        = string
 }
 
+variable "app_vlan_lb_ip" {
+  description = "IP address of the load balancer on the private network"
+  type        = string
+  nullable    = true
+}
+
 variable "admin_vlan_name" {
   description = "Name of the private network dedicated to administrators, aka Neutron resource within OVH OpenStack"
   type        = string
