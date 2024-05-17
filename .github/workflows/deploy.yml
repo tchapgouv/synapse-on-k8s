@@ -254,4 +254,4 @@ jobs:
 
       # Run ansible_configuration.sh script
       - name: ansible_configuration script
-        run: sh scripts/ansible_configuration.sh
+        run: export ENVIRONMENT="${{ needs.set_environment.outputs.my_env }}" && sh scripts/ansible_configuration.sh
