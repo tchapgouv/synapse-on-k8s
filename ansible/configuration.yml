@@ -3,6 +3,8 @@
 - hosts: localhost
   vars:
     absent_or_present: present
+  tags:
+    - kubernetes
   roles:
     - check
     - ingress-controller
@@ -20,3 +22,14 @@
     - synapse-extra-config
     - element-web
     - monitoring
+
+# Installs and configures all the components needed for the admin VM
+- hosts: admin
+  become: true
+  vars:
+    absent_or_present: present
+  tags:
+    - production
+    - admin_vm
+  roles:
+    - basic
