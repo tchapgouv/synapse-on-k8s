@@ -12,7 +12,7 @@ resource "openstack_compute_floatingip_associate_v2" "mvm_admin_ip_association" 
   count       = var.env_name != "production" ? 1 : 0
   floating_ip = openstack_networking_floatingip_v2.vm_admin_fip[0].address
   instance_id = openstack_compute_instance_v2.vm_admin.id
-  fixed_ip    = openstack_compute_instance_v2.vm_admin.network.0.fixed_ip_v4
+  fixed_ip    = openstack_compute_instance_v2.vm_admin.network[0].fixed_ip_v4
 }
 
 locals {
