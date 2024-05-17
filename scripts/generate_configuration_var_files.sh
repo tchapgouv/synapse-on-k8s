@@ -40,4 +40,11 @@ LOCAL=../local
     export REDIS_PASSWORD=$(openssl rand -base64 14)
 
     envsubst <"../ansible/group_vars/env_vars.tmpl" > ../ansible/group_vars/all.yml
+
+    # VM admin is built in every environment BUT production
+    if [ ${ENVIRONMENT} != 'production' ]; then
+      export VM_ADMIN_IP=$(jq -r ". | .\"vm_admin_ip\".value" terraform_output.json)
+      envsubst <"../scripts/admin_inventory.tmpl" > ../ansible/inventories/admin_inventory
+    fi
+
 )
