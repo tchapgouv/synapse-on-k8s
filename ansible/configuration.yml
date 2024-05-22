@@ -28,8 +28,15 @@
   become: true
   vars:
     absent_or_present: present
+  vars_files:
+    - group_vars/admin.yml
   tags:
     - production
     - admin_vm
   roles:
     - basic
+    - geerlingguy.postgresql
+    - community.zabbix.zabbix_server
+#    - geerlingguy.apache
+#    - wdijkerman.php
+#    - community.zabbix.zabbix_web
