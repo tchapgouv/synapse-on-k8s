@@ -16,6 +16,7 @@
     - first-admin
     - auth-buttons
     - discovery-rooms
+    - cgu-room
     - synapse-extra-config
     - element-web
     - monitoring
