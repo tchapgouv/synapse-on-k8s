@@ -11,6 +11,8 @@
       defaultServer:
         url: "https://{{ matrix.server_name }}"
         name: "{{ matrix.server_name }}"
+        #  if not set or "", helm chart sets it to vector.im. Space here avoids overriding configuration along with the identity server unreachable warning on login page
+        identity_url: " "
       nginxConfig: |-
         add_header X-Frame-Options SAMEORIGIN;
         add_header X-Content-Type-Options nosniff;
@@ -30,7 +32,6 @@
         className: nginx
         annotations:
           cert-manager.io/cluster-issuer: "letsencrypt-prod"
-          external-dns.alpha.kubernetes.io/hostname: "{{ element.server_name }}"
         hosts:
           - "{{ element.server_name }}"
         tls:

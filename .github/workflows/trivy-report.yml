@@ -19,16 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: If after develop push, wait 15 minutes for deployment
-        uses: juliangruber/sleep-action@v2.0.0
-        with:
-          time: 15m
+        run: sleep 900
 
   trivy-report:
-    permissions:
-      security-events: write
     name: "Trivy report on develop environment"
+    needs: sleep
     outputs:
-      RUNNER: ${{ runner.name }}
+      images: ${{ steps.get-images.outputs.images }}
     environment: develop
     env:
       ENVIRONMENT: "develop"
@@ -72,34 +69,13 @@ jobs:
           ./scripts/generate_configuration_var_files.sh
 
       - name: Scan all image to get sarif reports
+        id: get-images
         env:
           TRIVY_VERSION: 0.50.1
         run: |
           export KUBECONFIG=$PWD/local/kubeconfig.yml
-          IMAGES=$(kubectl get pods --all-namespaces -o go-template --template="{{range .items}}{{range .spec.containers}}{{.image}} {{end}}{{end}}" | sort | tr " " "\n" | uniq)
-          mkdir -p sarif-reports
-          for IMAGE in $IMAGES; do
-            echo "Scanning image $IMAGE"
-            if [[ $IMAGE == *"registry.kubernatine.ovh"* ]]; then
-              echo "Skipping image $IMAGE"
-              continue
-            fi
-            SLUG=$(echo $IMAGE | tr ":" "_" | tr "/" "_")
-            docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
-            image --severity HIGH,CRITICAL --scanners vuln --format template --format sarif -o sarif-reports/report-$SLUG.sarif $IMAGE
-          done
-
-      - name: Merge sarif reports
-        run: |
-          mkdir -p sarif-report
-          npm i -g @microsoft/sarif-multitool@v4.5.4
-          npx @microsoft/sarif-multitool merge sarif-reports/*.sarif --recurse true --output-directory=sarif-report --output-file=MergedResult.sarif
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: sarif-report/MergedResult.sarif
-          category: trivy
+          IMAGES=$(kubectl get pods --all-namespaces --field-selector=status.phase==Running -o json | jq -c '[.items[].spec.containers[].image] | unique')
+          echo "images=$IMAGES" >> "$GITHUB_OUTPUT"
 
       - name: Trivy Summary
         env:
@@ -127,3 +103,30 @@ jobs:
           from: ${{ vars.SMTP_DISPLAY_NAME }} <${{ vars.SMTP_FROM }}>
           body: "Hi,\nI checked develop environment for vulnerabilities, please find attached the trivy report.\n\nG00d luck,\n\n🤖"
           attachments: trivy.txt, trivy-summary.txt
+
+  trivy-report-sarif:
+    name: "Trivy report for github security alerts"
+    permissions:
+      security-events: write
+    runs-on: ubuntu-latest
+    needs: trivy-report
+    strategy:
+      max-parallel: 3
+      matrix:
+        image: ${{ fromJson(needs.trivy-report.outputs.images) }}
+
+    steps:
+      - name: Scan image to get sarif reports
+        env:
+          TRIVY_VERSION: 0.50.1
+        run: |
+          export SLUG=$(echo ${{ matrix.image }} | tr ":" "_" | tr "/" "_")
+          mkdir -p sarif-reports
+          docker run -v $(pwd):/work -v $(pwd)/tmp-trivy:/tmp/trivy/ -w /work aquasec/trivy:$TRIVY_VERSION \
+          image --severity HIGH,CRITICAL --scanners vuln --format template --format sarif -o sarif-reports/report-$SLUG.sarif ${{ matrix.image }}
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sarif-reports
+          category: trivy

@@ -43,18 +43,34 @@ export AWS_REGION="<the OVH s3 region>"
 # variables used by infrastructure components
 export ENV_IN_URL="<part of the URL that will be specific for each environment>"
 export CLUSTER_VERSION="<kubernetes version of the cluster: 1.23, 1.24, ...>"
+export INGRESS_SERVICE_PORT_WEBSECURE="<port of the ingress NodePort service e.g. 30695 for https>"
+export INGRESS_SERVICE_PORT_WEB="<port of the ingress NodePort service e.g. 30696 for http>"
 export NODEPOOL_FLAVOR="<flavor set to each node : b2-7, b2-15, R2-30, ...>"
 export DESIRED_NODES_NUM="<Desired number of kubernetes nodes>"
 export MAX_NODES_NUM="<Maximum number of kubernetes nodes>"
 export MIN_NODES_NUM="<Minimum number of kubernetes nodes>"
 export DNS_ZONE="<domain name : eimis.incubateur.net, eimis.fr, ...>"
+export DNS_ZONE_EXCLUSIVE="<Indicates if the dns zone is exclusive to the environment or if it is shared with other environments>"
 export ISSUER_MAIL="<email address used for letsEncrypt/ACME registration>"
 export GLOBALE_REGION="<OVH global location for PostGreSQL and VPC e.g. 'GRA'>"
 export DATABASE_VERSION="<Version of postgresql>"
 export DATABASE_PLAN="<OVH plan for database : essential = 1 nodes, business = 2 nodes, enterprise = 3 nodes>"
 export DATABASE_FLAVOR="<OVH flavor of the VM on which the database is installed : db1-4, db1-7, db1-15, db1-30, ...>"
 export DATABASE_DISK_SIZE="<Size of the disk for the database VM>"
-export VLAN_CIDR="<Range of IP for the private network e.g. 192.168.30>"
+
+# App Network configuration
+export APP_VLAN_NAME="${ENVIRONMENT}-app-network"
+export APP_VLAN_CIDR="<Sets the CIDR block for the application VLAN e.g. 192.168.20.0/24>"
+export APP_VLAN_GATEWAY="<Sets the gateway IP for the application VLAN e.g. 192.168.20.1>"
+export APP_VLAN_DNS="<Sets the DNS servers for the application VLAN e.g. \"1.1.1.1\",\"1.0.0.1\">"
+export APP_VLAN_LB_IP="<Optional: Sets the IP address for the LoadBalancer in the application VLAN e.g. 192.168.20.132>"
+
+# Admin Network configuration
+export ADMIN_VLAN_NAME="${ENVIRONMENT}-admin-network"
+export ADMIN_VLAN_CIDR="<Sets the CIDR block for the admin VLAN e.g. 192.168.100.0/24>"
+export ADMIN_VLAN_GATEWAY="<Sets the gateway IP for the admin VLAN e.g. 192.168.100.1>"
+export ADMIN_VLAN_DNS="<Sets the DNS servers for the admin VLAN e.g. \"1.1.1.1\",\"1.0.0.1\>"
+
 # variables used by matrix components
 export SERVER_SUBDOMAIN_NAME="<the matrix serverName will be : SERVER_SUBDOMAIN_NAME.ENV_IN_URL.DNS_ZONE>"
 export ELEMENT_SUBDOMAIN_NAME="<the front-end url will be : ELEMENT_SUBDOMAIN_NAME.ENV_IN_URL.DNS_ZONE>"
@@ -95,6 +111,8 @@ export TEAMS_OAUTH_CLIENT_SECRET="<Application secret coming from the azure port
 export MONITORING_SUBDOMAIN_NAME="<the grafana serverName will be : SERVER_SUBDOMAIN_NAME.ENV_IN_URL.DNS_ZONE>"
 export MONITORING_GRAFANA_PASSWORD="<password for the grafana admin user>"
 export MONITORING_PROMETHEUS_VOLUME_SIZE="<Prometheus database size in a k8s format e.g. 10Gi>"
+export AM_ZABBIX_URL="<URL of the zabbix that receives alerts : Ex: http://10.134.XX.XX:9095/alerts>"
+export AM_MAIL_RECEIVER="<mail that receives alerts sent by mail : Ex: ans-middle-run.fr@capgemini.com>"
 # stunner
 export STUNNER_ENABLED="<true or false>"
 export STUNNER_SHARED_SECRET="<shared secret for stunner>"

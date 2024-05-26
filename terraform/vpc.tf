@@ -3,8 +3,9 @@ data "openstack_networking_network_v2" "ext_net" {
   region = var.os_region_name
 }
 
+###### APP network ######
 resource "openstack_networking_network_v2" "private_network" {
-  name           = "${var.env_name}-private-network"
+  name           = var.app_vlan_name
   region         = var.os_region_name
   admin_state_up = "true"
 }
@@ -12,21 +13,16 @@ resource "openstack_networking_network_v2" "private_network" {
 resource "openstack_networking_subnet_v2" "subnet" {
   network_id      = openstack_networking_network_v2.private_network.id
   region          = var.os_region_name
-  name            = "${var.env_name}-subnet"
-  cidr            = "${var.vlan_cidr}.0/24"
+  name            = "${var.app_vlan_name} subnet"
+  cidr            = var.app_vlan_cidr
   enable_dhcp     = true
-  no_gateway      = false
-  dns_nameservers = ["1.1.1.1", "1.0.0.1"]
-
-  allocation_pool {
-    start = "${var.vlan_cidr}.100"
-    end   = "${var.vlan_cidr}.254"
-  }
+  gateway_ip      = var.app_vlan_gateway
+  dns_nameservers = var.app_vlan_dns
 }
 
 resource "openstack_networking_router_v2" "router" {
   region              = var.os_region_name
-  name                = "${var.env_name}-router"
+  name                = "${var.env_name}-app-router"
   admin_state_up      = true
   external_network_id = data.openstack_networking_network_v2.ext_net.id
 }
@@ -35,4 +31,34 @@ resource "openstack_networking_router_interface_v2" "router_interface" {
   router_id = openstack_networking_router_v2.router.id
   region    = var.os_region_name
   subnet_id = openstack_networking_subnet_v2.subnet.id
+}
+
+###### ADMIN network ######
+resource "openstack_networking_network_v2" "admin_network" {
+  name           = var.admin_vlan_name
+  region         = var.os_region_name
+  admin_state_up = "true"
+}
+
+resource "openstack_networking_subnet_v2" "admin_subnet" {
+  network_id      = openstack_networking_network_v2.admin_network.id
+  region          = var.os_region_name
+  name            = "${var.admin_vlan_name} subnet"
+  cidr            = var.admin_vlan_cidr
+  enable_dhcp     = true
+  gateway_ip      = var.admin_vlan_gateway
+  dns_nameservers = var.admin_vlan_dns
+}
+
+resource "openstack_networking_router_v2" "admin_router" {
+  region              = var.os_region_name
+  name                = "${var.env_name}-admin-router"
+  admin_state_up      = true
+  external_network_id = data.openstack_networking_network_v2.ext_net.id
+}
+
+resource "openstack_networking_router_interface_v2" "admin_router_interface" {
+  router_id = openstack_networking_router_v2.admin_router.id
+  region    = var.os_region_name
+  subnet_id = openstack_networking_subnet_v2.admin_subnet.id
 }

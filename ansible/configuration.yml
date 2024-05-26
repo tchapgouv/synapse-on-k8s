@@ -7,7 +7,6 @@
     - check
     - ingress-controller
     - cert-manager
-    - external-dns
     - keycloak-operator
     - postgresql-init
     - keycloak

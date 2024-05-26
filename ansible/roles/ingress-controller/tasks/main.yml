@@ -12,18 +12,11 @@
     release_namespace: ingress-nginx
     create_namespace: true
     update_repo_cache: yes
+    values:
+      service:
+        enable: false
 
-- name: Get the ingress-controller external IP
-  kubernetes.core.k8s_info:
-    api_version: v1
-    kind: Service
-    name: ingress-nginx-controller
-    namespace: ingress-nginx
-  register: ingress_controller_service
-  until: ingress_controller_service.resources[0].status.loadBalancer.ingress[0].ip is defined
-  retries: 10
-  delay: 10
-
-- name: "DEBUG ingress-controller external IP"
-  debug:
-    msg: "{{ ingress_controller_service.resources[0].status.loadBalancer.ingress[0].ip }}"
+- name: Add ingress-nginx controller service
+  kubernetes.core.k8s:
+    state: present
+    template: "ingress-nginx-service.yml"
