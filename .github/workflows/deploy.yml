@@ -94,6 +94,7 @@ env:
   SYNAPSE_IMAGE_TAG: ${{ vars.SYNAPSE_IMAGE_TAG }}
   SYNAPSE_MEDIA_UPLOAD_MAX_SIZE_MB: ${{ vars.SYNAPSE_MEDIA_UPLOAD_MAX_SIZE_MB }}
   SYNAPSE_WELCOME_ROOM: ${{ vars.SYNAPSE_WELCOME_ROOM }}
+  SYNAPSE_WHITELIST_ROOM: ${{ vars.SYNAPSE_WHITELIST_ROOM }}
   # variables used to connect to Pro Santé Connect.
   # see : https://industriels.esante.gouv.fr/produits-et-services/pro-sante-connect/documentation-technique
   PROSANTE_CONNECT_ENABLED: ${{ vars.PROSANTE_CONNECT_ENABLED }}
