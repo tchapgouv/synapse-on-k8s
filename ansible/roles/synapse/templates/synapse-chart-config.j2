@@ -2,6 +2,8 @@ image:
   repository: eimisans/synapse
   tag: {{ matrix.image_tag }}
 synapse:
+  securityContext:
+    readOnlyRootFilesystem: true
   resources:
     requests:
       memory: "256Mi"
