@@ -74,6 +74,8 @@ redis:
   image:
     repository: redis
     tag: {{ matrix.redis_tag }}
+  auth:
+    password: "{{ matrix.redis_password }}"
 extraConfig:
   allow_public_rooms_over_federation: true
   enable_registration_without_verification: false
