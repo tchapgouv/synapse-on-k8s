@@ -31,6 +31,7 @@ synapse:
 serverName: "{{ matrix.server_name }}"
 config:
   enableRegistration: "{{ matrix.auto_registration }}"
+  trustedKeyServers: []
 postgresql:
   enabled: false
 externalPostgresql:
