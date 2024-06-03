@@ -21,6 +21,7 @@ resource "openstack_networking_subnet_v2" "subnet" {
 }
 
 resource "openstack_networking_router_v2" "router" {
+  count               = var.env_name != "production" ? 1 : 0
   region              = var.os_region_name
   name                = "${var.env_name}-app-router"
   admin_state_up      = true
@@ -28,7 +29,8 @@ resource "openstack_networking_router_v2" "router" {
 }
 
 resource "openstack_networking_router_interface_v2" "router_interface" {
-  router_id = openstack_networking_router_v2.router.id
+  count     = var.env_name != "production" ? 1 : 0
+  router_id = openstack_networking_router_v2.router[0].id
   region    = var.os_region_name
   subnet_id = openstack_networking_subnet_v2.subnet.id
 }
@@ -51,6 +53,7 @@ resource "openstack_networking_subnet_v2" "admin_subnet" {
 }
 
 resource "openstack_networking_router_v2" "admin_router" {
+  count               = var.env_name != "production" ? 1 : 0
   region              = var.os_region_name
   name                = "${var.env_name}-admin-router"
   admin_state_up      = true
@@ -58,7 +61,8 @@ resource "openstack_networking_router_v2" "admin_router" {
 }
 
 resource "openstack_networking_router_interface_v2" "admin_router_interface" {
-  router_id = openstack_networking_router_v2.admin_router.id
+  count     = var.env_name != "production" ? 1 : 0
+  router_id = openstack_networking_router_v2.admin_router[0].id
   region    = var.os_region_name
   subnet_id = openstack_networking_subnet_v2.admin_subnet.id
 }
