@@ -52,6 +52,13 @@ ingress:
       secretName: "matrix-tls-secret"
 wellknown:
   enabled: true
+  securityContext:
+   capabilities:
+     drop:
+     - ALL
+   readOnlyRootFilesystem: true
+   runAsNonRoot: true
+   runAsUser: 100
   resources:
    limits:
      cpu: 5m
