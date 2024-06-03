@@ -58,6 +58,8 @@ wellknown:
    requests:
      cpu: 5m
      memory: 15Mi
+  image:
+    tag: {{ matrix.wellknown_image_tag }}
 redis:
   image:
     repository: redis
