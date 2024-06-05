@@ -38,7 +38,9 @@ data:
         client_id: "{{ prosante_connect.client_id }}"
         client_secret: "{{ prosante_connect.client_secret }}"
         scopes: ["openid", "scope_all"]
+        user_profile_method: userinfo_endpoint
         user_mapping_provider:
+          module: synapse.psc_mapping_provider.ProsanteConnectMappingProvider
           config:
             localpart_template: "{% raw %}{{ user.preferred_username }}{% endraw %}"
             display_name_template: "{% raw %}{{ user.given_name }} {{ user.family_name }}{% endraw %}"
@@ -48,6 +50,11 @@ data:
 {% if matrix.servers_list is defined %}
     federation_domain_whitelist: {{ matrix.servers_list }}
 {% endif %}
+    modules:
+      - module: white_list_module.EimisWhiteList
+        config:
+          room_id: "{{ matrix.whitelist_room }}"
+          idp_id: "psc"
     media_storage_providers:
       - module: s3_storage_provider.S3StorageProviderBackend
         store_local: True
