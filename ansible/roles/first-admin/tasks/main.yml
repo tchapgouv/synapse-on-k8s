@@ -20,7 +20,7 @@
     admin='admin'
     secret='{{ registration_shared_secret.stdout }}'
     printf '%s\0%s\0%s\0%s' "$nonce" "$username" "$password" "$admin" |
-    openssl sha1 -hmac "$secret" |
+    openssl dgst -sha1 -hmac "$secret" |
     awk '{print $2}'
   register: hmac
 
