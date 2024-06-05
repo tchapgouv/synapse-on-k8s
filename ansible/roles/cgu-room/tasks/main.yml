@@ -1,0 +1,47 @@
+---
+- name: Get the room id of the room with the alias cgu
+  uri:
+    url: "https://{{ matrix.server_name }}/_matrix/client/v3/directory/room/%23cgu%3A{{matrix.server_name}}?roomAlias=%23cgu%3A{{matrix.server_name}}"
+    method: GET
+    status_code: 200, 404 # allow 404 when no alias exists
+    body_format: json
+    use_proxy: false
+    return_content: yes
+    follow_redirects: all
+    headers:
+      Authorization: "Bearer {{ admin_access_token }}"
+  register: cgu_room_response
+
+- name: Create public cgu room if it doesn't existing
+  uri:
+    url: "https://{{ matrix.server_name }}/_matrix/client/v3/createRoom"
+    method: POST
+    body: "{{ lookup('template', 'cgu-room.json') }}"
+    status_code: 200, 201
+    body_format: json
+    use_proxy: false
+    return_content: yes
+    follow_redirects: all
+    headers:
+      Authorization: "Bearer {{ admin_access_token }}"
+  register: cgu_room_creation_response
+  when: cgu_room_response.status==404
+
+- name: Set the cgu_room variable after creation
+  set_fact:
+    cgu_room_id: "{{ cgu_room_creation_response.json.room_id }}"
+  when: cgu_room_response.status==404
+
+- name: Send CGU message
+  uri:
+    url: "https://{{ matrix.server_name }}/_matrix/client/v3/rooms/{{ cgu_room_id }}/send/m.room.message"
+    method: POST
+    body: "{{ lookup('template', 'cgu-message.json') }}"
+    status_code: 200
+    body_format: json
+    use_proxy: false
+    return_content: yes
+    follow_redirects: all
+    headers:
+      Authorization: "Bearer {{ admin_access_token }}"
+  when: cgu_room_response.status==404

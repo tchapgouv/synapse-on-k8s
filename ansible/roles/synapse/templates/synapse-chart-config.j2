@@ -92,6 +92,7 @@ extraConfig:
     notif_from: "{{ matrix.notify_from }}"
   auto_join_rooms: 
       - "#discoveryroom:{{ matrix.server_name }}"
+      - "#cgu:{{ matrix.server_name }}"
 {% if matrix.welcome_room is defined %}
       - "#{{ matrix.welcome_room }}:{{ matrix.server_name }}"
 {% endif %}
