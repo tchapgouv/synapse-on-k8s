@@ -2,6 +2,8 @@ image:
   repository: eimisans/synapse
   tag: {{ matrix.image_tag }}
 synapse:
+  securityContext:
+    readOnlyRootFilesystem: true
   resources:
     requests:
       memory: "256Mi"
@@ -31,6 +33,7 @@ synapse:
 serverName: "{{ matrix.server_name }}"
 config:
   enableRegistration: "{{ matrix.auto_registration }}"
+  trustedKeyServers: []
 postgresql:
   enabled: false
 externalPostgresql:
@@ -51,6 +54,13 @@ ingress:
       secretName: "matrix-tls-secret"
 wellknown:
   enabled: true
+  securityContext:
+   capabilities:
+     drop:
+     - ALL
+   readOnlyRootFilesystem: true
+   runAsNonRoot: true
+   runAsUser: 100
   resources:
    limits:
      cpu: 5m
@@ -58,10 +68,14 @@ wellknown:
    requests:
      cpu: 5m
      memory: 15Mi
+  image:
+    tag: {{ matrix.wellknown_image_tag }}
 redis:
   image:
     repository: redis
     tag: {{ matrix.redis_tag }}
+  auth:
+    password: "{{ matrix.redis_password }}"
 extraConfig:
   allow_public_rooms_over_federation: true
   enable_registration_without_verification: false
