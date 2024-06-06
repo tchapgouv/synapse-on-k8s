@@ -35,8 +35,5 @@
     - admin_vm
   roles:
     - basic
-    - geerlingguy.postgresql
-    - community.zabbix.zabbix_server
-#    - geerlingguy.apache
-#    - wdijkerman.php
-#    - community.zabbix.zabbix_web
+    - docker
+    - zabbix

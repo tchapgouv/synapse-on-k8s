@@ -1,0 +1,11 @@
+---
+- name: Git checkout
+  ansible.builtin.git:
+    repo: 'https://github.com/zabbix/zabbix-docker.git'
+    dest: ./zabbix-docker
+    version: 7.0
+
+- name: Launch Zabbix with docker-compose
+  community.docker.docker_compose_v2:
+    project_src: ./zabbix-docker
+    files: docker-compose_v3_alpine_pgsql_latest.yaml

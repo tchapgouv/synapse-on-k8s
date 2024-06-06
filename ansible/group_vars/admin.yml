@@ -1,23 +1,26 @@
 ---
-postgresql_locales:
-  - 'en_US.UTF-8'
-postgresql_databases:
-  - name: monitor
-    lc_collate: 'en_US.UTF-8'
-    encoding: 'UTF-8'
-postgresql_users:
-  - name: monitor_user
-    password: supersecuremonitor
+#postgresql_locales:
+#  - 'en_US.UTF-8'
+#postgresql_auth_method: 'scram-sha-256'
+#postgresql_databases:
+#  - name: zabbix-server
+#    lc_collate: 'C.UTF-8'
+#    encoding: 'UTF-8'
+#postgresql_users:
+#  - name: zabbix-server
+#    password: "{{ monitoring.zabbix.db_password }}"
+#postgresql_databases:
+#  - name: example_db
+#postgresql_users:
+#  - name: example_user
+#    password: supersecure
 
 # Zabbix Server Configuration
-zabbix_server_version: 6.4
-zabbix_server_dbhost_run_install: true
-zabbix_server_database: pgsql
-zabbix_server_database_long: postgresql
-zabbix_server_dbhost: localhost
-zabbix_server_dbname: "{{ postgresql_databases[0].name }}"
-zabbix_server_dbuser: "{{ postgresql_users[0].name }}"
-zabbix_server_dbpassword: "{{ postgresql_users[0].password }}"
-zabbix_server_dbport: 5432
-zabbix_server_dbencoding: "{{ postgresql_databases[0].encoding }}"
-zabbix_server_dbcollation: "{{ postgresql_databases[0].lc_collate }}"
+#zabbix_server_version: 6.4
+#zabbix_server_database: pgsql
+#zabbix_server_database_long: postgresql
+#zabbix_server_dbport: 5432
+#zabbix_server_dbpassword: "{{ monitoring.zabbix.db_password }}"
+#zabbix_server_dbpassword_hash_method: "{{ postgresql_auth_method }}"
+#zabbix_server_dbname: "{{ postgresql_databases[0].name }}"
+#zabbix_server_dbuser: "{{ postgresql_users[0].name }}"
