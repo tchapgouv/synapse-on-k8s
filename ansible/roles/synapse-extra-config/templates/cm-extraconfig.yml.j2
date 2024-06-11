@@ -8,6 +8,7 @@ data:
   extraconfig.yaml: |
     password_config:
       enabled: {{ matrix.password_config }}
+    enable_set_displayname: {{ matrix.enable_change_displayname }}
 {% if discovery_room_id is defined %}
     # Those rooms will be hidden from users
     exclude_rooms_from_sync:
