@@ -31,6 +31,7 @@ LOCAL=../local
     export KEYCLOAK_DB_HOST=$(jq -r ". | .\"keycloak_db_host\".value" terraform_output.json)
     export KEYCLOAK_DB_PORT=$(jq -r ". | .\"keycloak_db_port\".value" terraform_output.json)
     export BASE_URL=$(jq -r ". | .\"base_url\".value" terraform_output.json)
+    export REDIS_PASSWORD=$(openssl rand -base64 14)
 
     envsubst <"../ansible/group_vars/env_vars.tmpl" > ../ansible/group_vars/all.yml
 )

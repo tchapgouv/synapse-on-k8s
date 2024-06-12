@@ -1,0 +1,19 @@
+{
+  "name": "Infos Expérimentation Messagerie",
+  "topic": "Ce salon sert à vous informer sur les actualités des expérimentations liées à votre messagerie instantanée",
+  "power_level_content_override": {
+    "events_default": 100,
+    "invite": 50,
+    "kick": 50,
+    "state_default": 100,
+    "users_default": 0,
+    "users": {
+      "@{{ matrix.first_eimis_username }}:{{ matrix.server_name }}": 100
+    }
+  },
+  "preset": "public_chat",
+  "room_alias_name": "cgu",
+  "room_version": "9",
+  "visibility": "public",
+  "join_rules": "public"
+}

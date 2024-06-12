@@ -19,10 +19,10 @@ spec:
     permanentLockout: false
     maxFailureWaitSeconds: 900
     minimumQuickLoginWaitSeconds: 60
-    waitIncrementSeconds: 60
+    waitIncrementSeconds: 900
     quickLoginCheckMilliSeconds: 1000
-    maxDeltaTimeSeconds: 43200
-    failureFactor: 30
+    maxDeltaTimeSeconds: 54000
+    failureFactor: 5
     passwordPolicy: "length(8) and notEmail(undefined) and upperCase(1) and lowerCase(1) and digits(1) and passwordHistory(3) and forceExpiredPasswordChange(365)"
     resetPasswordAllowed: true
     clients:
