@@ -12,7 +12,7 @@ resource "ovh_cloud_project_database" "pg_keycloak_database" {
     for_each = toset(local.nodes_set)
     content {
       region     = var.global_region
-      network_id = ovh_cloud_project_network_private.app_network.id
+      network_id = one(ovh_cloud_project_network_private.app_network.regions_attributes[*].openstackid)
       subnet_id  = ovh_cloud_project_network_private_subnet.app_subnet.id
     }
   }
