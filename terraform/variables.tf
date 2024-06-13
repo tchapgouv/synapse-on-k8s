@@ -13,6 +13,11 @@ variable "os_region_name" {
   description = "OVH region for the cluster (from https://www.ovhcloud.com/en/public-cloud/regions-availability/): GRA1, GRA7 ..."
 }
 
+variable "app_vlan_id" {
+  description = "ID of the private network dedicated to applications, aka Neutron resource within OVH OpenStack"
+  type        = string
+}
+
 variable "app_vlan_name" {
   description = "Name of the private network dedicated to applications, aka Neutron resource within OVH OpenStack"
   type        = string
@@ -34,10 +39,25 @@ variable "app_vlan_cidr" {
   type        = string
 }
 
+variable "app_vlan_ip_start" {
+  description = "First IP for the private application network"
+  type        = string
+}
+
+variable "app_vlan_ip_end" {
+  description = "Last IP for the private application network"
+  type        = string
+}
+
 variable "app_vlan_lb_ip" {
   description = "IP address of the load balancer on the private network"
   type        = string
   nullable    = true
+}
+
+variable "admin_vlan_id" {
+  description = "ID of the private network dedicated to administrators, aka Neutron resource within OVH OpenStack"
+  type        = string
 }
 
 variable "admin_vlan_name" {
@@ -58,6 +78,16 @@ variable "admin_vlan_dns" {
 
 variable "admin_vlan_cidr" {
   description = "Range of IP for the private administrators private network"
+  type        = string
+}
+
+variable "admin_vlan_ip_start" {
+  description = "First IP for the private administrators private network"
+  type        = string
+}
+
+variable "admin_vlan_ip_end" {
+  description = "Last IP for the private administrators private network"
   type        = string
 }
 

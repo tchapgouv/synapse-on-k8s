@@ -1,5 +1,5 @@
 resource "ovh_cloud_project_database" "pg_keycloak_database" {
-  depends_on   = [openstack_networking_subnet_v2.subnet]
+  depends_on   = [ovh_cloud_project_network_private_subnet.app_subnet]
   service_name = var.service_name
   description  = "PostGreSQL keycloak database for ${var.env_name}"
   engine       = "postgresql"
@@ -12,8 +12,8 @@ resource "ovh_cloud_project_database" "pg_keycloak_database" {
     for_each = toset(local.nodes_set)
     content {
       region     = var.global_region
-      network_id = openstack_networking_network_v2.private_network.id
-      subnet_id  = openstack_networking_subnet_v2.subnet.id
+      network_id = ovh_cloud_project_network_private.app_network.id
+      subnet_id  = ovh_cloud_project_network_private_subnet.app_subnet.id
     }
   }
   ip_restrictions {
