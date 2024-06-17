@@ -23,17 +23,6 @@ variable "app_vlan_name" {
   type        = string
 }
 
-variable "app_vlan_gateway" {
-  description = "Default gateway ip used by devices in the applications subnet"
-  type        = string
-}
-
-variable "app_vlan_dns" {
-  description = "Array of DNS name server names used by hosts in the applications subnet"
-  type        = list(string)
-  default     = ["1.1.1.1", "1.0.0.1"]
-}
-
 variable "app_vlan_cidr" {
   description = "Range of IP for the private application network"
   type        = string
@@ -63,17 +52,6 @@ variable "admin_vlan_id" {
 variable "admin_vlan_name" {
   description = "Name of the private network dedicated to administrators, aka Neutron resource within OVH OpenStack"
   type        = string
-}
-
-variable "admin_vlan_gateway" {
-  description = "Default gateway ip used by devices in the administrators subnet"
-  type        = string
-}
-
-variable "admin_vlan_dns" {
-  description = "Array of DNS name server names used by hosts in the administrators subnet"
-  type        = list(string)
-  default     = ["1.1.1.1", "1.0.0.1"]
 }
 
 variable "admin_vlan_cidr" {
