@@ -61,17 +61,15 @@ export DATABASE_DISK_SIZE="<Size of the disk for the database VM>"
 # App Network configuration
 export APP_VLAN_NAME="${ENVIRONMENT}-app-network"
 export APP_VLAN_CIDR="<Sets the CIDR block for the application VLAN e.g. 192.168.20.0/24>"
+export APP_VLAN_GATEWAY="<Sets the gateway IP for the application VLAN e.g. 192.168.20.1>"
+export APP_VLAN_DNS="<Sets the DNS servers for the application VLAN e.g. \"1.1.1.1\",\"1.0.0.1\">"
 export APP_VLAN_LB_IP="<Optional: Sets the IP address for the LoadBalancer in the application VLAN e.g. 192.168.20.132>"
-export APP_VLAN_ID="<Sets the VLAN ID for the application VLAN e.g. 1983>"
-export APP_VLAN_IP_START="<Sets the first IP address for the application VLAN e.g. 192.168.20.100>"
-export APP_VLAN_IP_END="<Sets the last IP address for the application VLAN e.g. 192.168.20.200>"
 
 # Admin Network configuration
 export ADMIN_VLAN_NAME="${ENVIRONMENT}-admin-network"
 export ADMIN_VLAN_CIDR="<Sets the CIDR block for the admin VLAN e.g. 192.168.100.0/24>"
-export ADMIN_VLAN_ID="<Sets the VLAN ID for admin VLAN VLAN e.g. 1984>"
-export ADMIN_VLAN_IP_START="<Sets the first IP address for the admin VLAN e.g. 192.168.100.100>"
-export ADMIN_VLAN_IP_END="<Sets the last IP address for the admin VLAN e.g. 192.168.100.200>"
+export ADMIN_VLAN_GATEWAY="<Sets the gateway IP for the admin VLAN e.g. 192.168.100.1>"
+export ADMIN_VLAN_DNS="<Sets the DNS servers for the admin VLAN e.g. \"1.1.1.1\",\"1.0.0.1\>"
 
 # variables used by matrix components
 export SERVER_SUBDOMAIN_NAME="<the matrix serverName will be : SERVER_SUBDOMAIN_NAME.ENV_IN_URL.DNS_ZONE>"

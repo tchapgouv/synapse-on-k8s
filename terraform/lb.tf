@@ -1,7 +1,7 @@
 resource "openstack_lb_loadbalancer_v2" "k8s_lb" {
   name                  = "${var.env_name} load balancer"
   loadbalancer_provider = "amphora"
-  vip_subnet_id         = ovh_cloud_project_network_private_subnet.app_subnet.id
+  vip_subnet_id         = openstack_networking_subnet_v2.subnet.id
   vip_address           = var.app_vlan_lb_ip
   depends_on = [
     ovh_cloud_project_kube_nodepool.node_pool

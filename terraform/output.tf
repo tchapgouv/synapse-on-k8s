@@ -6,7 +6,7 @@ output "kubeconfig" {
 
 output "app_subnet_id" {
   description = "ID of the subnet for the application"
-  value       = ovh_cloud_project_network_private_subnet.app_subnet.id
+  value       = openstack_networking_subnet_v2.subnet.id
 }
 
 output "floating_network_id" {

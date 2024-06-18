@@ -13,28 +13,24 @@ variable "os_region_name" {
   description = "OVH region for the cluster (from https://www.ovhcloud.com/en/public-cloud/regions-availability/): GRA1, GRA7 ..."
 }
 
-variable "app_vlan_id" {
-  description = "ID of the private network dedicated to applications, aka Neutron resource within OVH OpenStack"
-  type        = string
-}
-
 variable "app_vlan_name" {
   description = "Name of the private network dedicated to applications, aka Neutron resource within OVH OpenStack"
   type        = string
 }
 
+variable "app_vlan_gateway" {
+  description = "Default gateway ip used by devices in the applications subnet"
+  type        = string
+}
+
+variable "app_vlan_dns" {
+  description = "Array of DNS name server names used by hosts in the applications subnet"
+  type        = list(string)
+  default     = ["1.1.1.1", "1.0.0.1"]
+}
+
 variable "app_vlan_cidr" {
   description = "Range of IP for the private application network"
-  type        = string
-}
-
-variable "app_vlan_ip_start" {
-  description = "First IP for the private application network"
-  type        = string
-}
-
-variable "app_vlan_ip_end" {
-  description = "Last IP for the private application network"
   type        = string
 }
 
@@ -44,28 +40,24 @@ variable "app_vlan_lb_ip" {
   nullable    = true
 }
 
-variable "admin_vlan_id" {
-  description = "ID of the private network dedicated to administrators, aka Neutron resource within OVH OpenStack"
-  type        = string
-}
-
 variable "admin_vlan_name" {
   description = "Name of the private network dedicated to administrators, aka Neutron resource within OVH OpenStack"
   type        = string
 }
 
+variable "admin_vlan_gateway" {
+  description = "Default gateway ip used by devices in the administrators subnet"
+  type        = string
+}
+
+variable "admin_vlan_dns" {
+  description = "Array of DNS name server names used by hosts in the administrators subnet"
+  type        = list(string)
+  default     = ["1.1.1.1", "1.0.0.1"]
+}
+
 variable "admin_vlan_cidr" {
   description = "Range of IP for the private administrators private network"
-  type        = string
-}
-
-variable "admin_vlan_ip_start" {
-  description = "First IP for the private administrators private network"
-  type        = string
-}
-
-variable "admin_vlan_ip_end" {
-  description = "Last IP for the private administrators private network"
   type        = string
 }
 
