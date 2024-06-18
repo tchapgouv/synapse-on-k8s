@@ -66,18 +66,16 @@ env:
   SYNAPSE_DB_USER: ${{ vars.SYNAPSE_DB_USER }}
   TF_LOG: ${{ vars.TF_LOG }}
   # App Network configuration
-  APP_VLAN_ID: ${{ vars.APP_VLAN_ID }}
   APP_VLAN_NAME: ${{ vars.APP_VLAN_NAME }}
   APP_VLAN_CIDR: ${{ vars.APP_VLAN_CIDR }}
-  APP_VLAN_IP_START: ${{ vars.APP_VLAN_IP_START }}
-  APP_VLAN_IP_END: ${{ vars.APP_VLAN_IP_END }}
+  APP_VLAN_GATEWAY: ${{ vars.APP_VLAN_GATEWAY }}
+  APP_VLAN_DNS: ${{ vars.APP_VLAN_DNS }}
   APP_VLAN_LB_IP: ${{ vars.APP_VLAN_LB_IP }}
   # Admin Network configuration
-  ADMIN_VLAN_ID: ${{ vars.ADMIN_VLAN_ID }}
   ADMIN_VLAN_NAME: ${{ vars.ADMIN_VLAN_NAME }}
   ADMIN_VLAN_CIDR: ${{ vars.ADMIN_VLAN_CIDR }}
-  ADMIN_VLAN_IP_START: ${{ vars.ADMIN_VLAN_IP_START }}
-  ADMIN_VLAN_IP_END: ${{ vars.ADMIN_VLAN_IP_END }}
+  ADMIN_VLAN_GATEWAY: ${{ vars.ADMIN_VLAN_GATEWAY }}
+  ADMIN_VLAN_DNS: ${{ vars.ADMIN_VLAN_DNS }}
   # variables used by matrix components
   SERVER_SUBDOMAIN_NAME: ${{ vars.SERVER_SUBDOMAIN_NAME }}
   ELEMENT_SUBDOMAIN_NAME: ${{ vars.ELEMENT_SUBDOMAIN_NAME }}
