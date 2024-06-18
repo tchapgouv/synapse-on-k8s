@@ -1,10 +1,10 @@
 resource "ovh_cloud_project_kube" "k8s_element_cluster" {
-  depends_on         = [openstack_networking_subnet_v2.subnet]
+  depends_on         = [ovh_cloud_project_network_private_subnet.app_subnet]
   service_name       = var.service_name
   name               = "synapse_${var.env_name}_cluster"
   region             = var.os_region_name
   version            = var.cluster_version
-  private_network_id = openstack_networking_network_v2.private_network.id
+  private_network_id = one(ovh_cloud_project_network_private.app_network.regions_attributes[*].openstackid)
 
   private_network_configuration {
     default_vrack_gateway              = ""
