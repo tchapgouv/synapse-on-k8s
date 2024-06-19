@@ -58,47 +58,31 @@ resource "openstack_networking_floatingip_associate_v2" "lb1" {
 }
 
 resource "openstack_lb_member_v2" "lb_member_websecure" {
-  count         = length(local.nodes_ips)
+  count = length(local.nodes_ips)
   name          = "websecure-member-${count.index}"
   pool_id       = openstack_lb_pool_v2.websecure_pool.id
   address       = local.nodes_ips[count.index]
   protocol_port = var.ingress_service_port_websecure
-  depends_on    = [data.openstack_compute_instance_v2.k8s_instances]
+  depends_on = [data.openstack_compute_instance_v2.instance]
 }
 
 resource "openstack_lb_member_v2" "lb_member_web" {
-  count         = length(local.nodes_ips)
+  count = length(local.nodes_ips)
   name          = "web-member-${count.index}"
   pool_id       = openstack_lb_pool_v2.web_pool.id
   address       = local.nodes_ips[count.index]
   protocol_port = var.ingress_service_port_web
-  depends_on    = [data.openstack_compute_instance_v2.k8s_instances]
+  depends_on = [data.openstack_compute_instance_v2.instance]
 }
 
 ### Specific to the admin VM hosting zabbix ###
-
-# resource "openstack_lb_listener_v2" "admin_web_listener" {
-#   count           = var.env_name != "production" ? 1 : 0
-#   name            = "${var.env_name} admin web listener"
-#   protocol        = "HTTP"
-#   protocol_port   = 80
-#   loadbalancer_id = openstack_lb_loadbalancer_v2.k8s_lb.id
-# }
-#
-# resource "openstack_lb_listener_v2" "admin_websecure_listener" {
-#   count           = var.env_name != "production" ? 1 : 0
-#   name            = "${var.env_name} admin websecure listener"
-#   protocol        = "HTTPS"
-#   protocol_port   = 443
-#   loadbalancer_id = openstack_lb_loadbalancer_v2.k8s_lb.id
-# }
 
 resource "openstack_lb_pool_v2" "admin_websecure_pool" {
   count       = var.env_name != "production" ? 1 : 0
   name        = "${var.env_name} admin websecure pool"
   protocol    = "HTTPS"
   lb_method   = "ROUND_ROBIN"
-  listener_id = openstack_lb_listener_v2.websecure_listener.id
+  loadbalancer_id = openstack_lb_loadbalancer_v2.k8s_lb.id
 }
 
 resource "openstack_lb_pool_v2" "admin_web_pool" {
@@ -106,7 +90,7 @@ resource "openstack_lb_pool_v2" "admin_web_pool" {
   name        = "${var.env_name} admin web pool"
   protocol    = "HTTP"
   lb_method   = "ROUND_ROBIN"
-  listener_id = openstack_lb_listener_v2.web_listener.id
+  loadbalancer_id = openstack_lb_loadbalancer_v2.k8s_lb.id
 }
 
 resource "openstack_lb_monitor_v2" "admin_websecure_pool_monitor" {
@@ -144,17 +128,17 @@ resource "openstack_lb_member_v2" "lb_admin_member_web" {
 }
 
 resource "openstack_lb_l7policy_v2" "l7policy_admin" {
-  count         = var.env_name != "production" ? 1 : 0
+  count            = var.env_name != "production" ? 1 : 0
   name             = "${var.env_name} l7policy for admin VM"
   action           = "REDIRECT_TO_POOL"
   description      = "test l7 policy"
   position         = 1
-  listener_id      = openstack_lb_listener_v2.websecure_listener.id
-  redirect_pool_id = openstack_lb_pool_v2.admin_websecure_pool[0].id
+  listener_id      = openstack_lb_listener_v2.web_listener.id
+  redirect_pool_id = openstack_lb_pool_v2.admin_web_pool[0].id
 }
 
 resource "openstack_lb_l7rule_v2" "l7rule_admin" {
-  count         = var.env_name != "production" ? 1 : 0
+  count        = var.env_name != "production" ? 1 : 0
   l7policy_id  = openstack_lb_l7policy_v2.l7policy_admin[0].id
   type         = "HOST_NAME"
   compare_type = "STARTS_WITH"
@@ -162,5 +146,5 @@ resource "openstack_lb_l7rule_v2" "l7rule_admin" {
 }
 
 locals {
-  external_lb_ip = var.env_name != "production" ? openstack_networking_floatingip_v2.lb_fip[0].address : openstack_lb_loadbalancer_v2.k8s_lb.vip_address
+  external_lb_ip = var.env_name != "production" ? openstack_networking_floatingip_v2.lb_fip[0].address :    openstack_lb_loadbalancer_v2.k8s_lb.vip_address
 }
