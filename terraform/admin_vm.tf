@@ -25,11 +25,11 @@ locals {
 }
 
 resource "openstack_compute_instance_v2" "vm_admin" {
-  count      = var.env_name != "production" ? 1 : 0
-  name       = "${var.env_name}_vm_admin"
-  image_name = "Debian 12"
-  flavor_id  = "906e8259-0340-4856-95b5-4ea2d26fe377"
-  key_pair   = openstack_compute_keypair_v2.vm_admin_keypair.name
+  count           = var.env_name != "production" ? 1 : 0
+  name            = "${var.env_name}_vm_admin"
+  image_name      = "Debian 12"
+  flavor_id       = "906e8259-0340-4856-95b5-4ea2d26fe377"
+  key_pair        = openstack_compute_keypair_v2.vm_admin_keypair.name
   security_groups = ["default"]
 
   metadata = {
