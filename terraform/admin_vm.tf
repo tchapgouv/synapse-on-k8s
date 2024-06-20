@@ -20,7 +20,7 @@ resource "openstack_compute_floatingip_associate_v2" "vm_admin_ip_association" {
 }
 
 locals {
-  external_vm_admin_ip = var.env_name != "production" ? openstack_networking_floatingip_v2.vm_admin_fip[0].address : ""
+  external_vm_admin_ip = local.create_fip ? openstack_networking_floatingip_v2.vm_admin_fip[0].address : ""
   internal_vm_admin_ip = var.env_name != "production" ? openstack_compute_instance_v2.vm_admin[0].access_ip_v4 : ""
 }
 
