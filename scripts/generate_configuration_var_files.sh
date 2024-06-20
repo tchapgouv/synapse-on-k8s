@@ -39,12 +39,14 @@ LOCAL=../local
     export BASE_URL=$(jq -r ". | .\"base_url\".value" terraform_output.json)
     export REDIS_PASSWORD=$(openssl rand -base64 14)
 
-    envsubst <"../ansible/group_vars/env_vars.tmpl" > ../ansible/group_vars/all.yml
-
     # VM admin is built in every environment BUT production
     if [ ${ENVIRONMENT} != 'production' ]; then
-      export VM_ADMIN_IP=$(jq -r ". | .\"vm_admin_ip\".value" terraform_output.json)
+      export PUBLIC_VM_ADMIN_IP=$(jq -r ". | .\"public_vm_admin_ip\".value" terraform_output.json)
+      export ZABBIX_IP=$(jq -r ". | .\"private_vm_admin_ip\".value" terraform_output.json)
       envsubst <"../scripts/admin_inventory.tmpl" > ../ansible/inventories/admin_inventory
+      export AM_ZABBIX_URL="http://${ZABBIX_IP}:10051/alerts"
     fi
+
+    envsubst <"../ansible/group_vars/env_vars.tmpl" > ../ansible/group_vars/all.yml
 
 )
