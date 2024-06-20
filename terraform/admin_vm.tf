@@ -8,7 +8,7 @@ resource "openstack_networking_floatingip_v2" "vm_admin_fip" {
   description = "${var.env_name} Admin VM floating IP"
 }
 
-resource "openstack_compute_floatingip_associate_v2" "mvm_admin_ip_association" {
+resource "openstack_compute_floatingip_associate_v2" "vm_admin_ip_association" {
   count       = var.env_name != "production" ? 1 : 0
   floating_ip = openstack_networking_floatingip_v2.vm_admin_fip[0].address
   instance_id = openstack_compute_instance_v2.vm_admin[0].id

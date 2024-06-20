@@ -22,32 +22,32 @@ resource "openstack_lb_listener_v2" "web_listener" {
   loadbalancer_id = openstack_lb_loadbalancer_v2.k8s_lb.id
 }
 
-resource "openstack_lb_pool_v2" "websecure_pool" {
+resource "openstack_lb_pool_v2" "k8s_websecure_pool" {
   name        = "${var.env_name}-k8s-websecure-pool"
   protocol    = "HTTPS"
   lb_method   = "ROUND_ROBIN"
   listener_id = openstack_lb_listener_v2.websecure_listener.id
 }
 
-resource "openstack_lb_pool_v2" "web_pool" {
+resource "openstack_lb_pool_v2" "k8s_web_pool" {
   name        = "${var.env_name}-k8s-web-pool"
   protocol    = "HTTP"
   lb_method   = "ROUND_ROBIN"
   listener_id = openstack_lb_listener_v2.web_listener.id
 }
 
-resource "openstack_lb_monitor_v2" "web_monitor" {
+resource "openstack_lb_monitor_v2" "k8s_web_monitor" {
   name        = "${var.env_name}-monitor-for-k8s-web-pool"
-  pool_id     = openstack_lb_pool_v2.web_pool.id
+  pool_id     = openstack_lb_pool_v2.k8s_web_pool.id
   type        = "HTTP"
   delay       = 10
   timeout     = 5
   max_retries = 5
 }
 
-resource "openstack_lb_monitor_v2" "websecure_monitor" {
+resource "openstack_lb_monitor_v2" "k8s_websecure_monitor" {
   name        = "${var.env_name}-monitor-for-k8s-websecure-pool"
-  pool_id     = openstack_lb_pool_v2.websecure_pool.id
+  pool_id     = openstack_lb_pool_v2.k8s_websecure_pool.id
   type        = "HTTPS"
   delay       = 10
   timeout     = 5
@@ -66,19 +66,19 @@ resource "openstack_networking_floatingip_associate_v2" "lb1" {
   port_id     = openstack_lb_loadbalancer_v2.k8s_lb.vip_port_id
 }
 
-resource "openstack_lb_member_v2" "lb_member_websecure" {
+resource "openstack_lb_member_v2" "k8s_member_websecure" {
   count = length(local.nodes_ips)
   name          = "k8s-websecure-member-${count.index}"
-  pool_id       = openstack_lb_pool_v2.websecure_pool.id
+  pool_id       = openstack_lb_pool_v2.k8s_websecure_pool.id
   address       = local.nodes_ips[count.index]
   protocol_port = var.ingress_service_port_websecure
   depends_on = [data.openstack_compute_instance_v2.instance]
 }
 
-resource "openstack_lb_member_v2" "lb_member_web" {
+resource "openstack_lb_member_v2" "k8s_member_web" {
   count = length(local.nodes_ips)
   name          = "k8s-web-member-${count.index}"
-  pool_id       = openstack_lb_pool_v2.web_pool.id
+  pool_id       = openstack_lb_pool_v2.k8s_web_pool.id
   address       = local.nodes_ips[count.index]
   protocol_port = var.ingress_service_port_web
   depends_on = [data.openstack_compute_instance_v2.instance]
