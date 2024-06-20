@@ -25,8 +25,8 @@ variable "app_vlan_gateway" {
 
 variable "app_vlan_dns" {
   description = "Array of DNS name server names used by hosts in the applications subnet"
-  type        = list(string)
-  default     = ["1.1.1.1", "1.0.0.1"]
+  type = list(string)
+  default = ["1.1.1.1", "1.0.0.1"]
 }
 
 variable "app_vlan_cidr" {
@@ -52,8 +52,8 @@ variable "admin_vlan_gateway" {
 
 variable "admin_vlan_dns" {
   description = "Array of DNS name server names used by hosts in the administrators subnet"
-  type        = list(string)
-  default     = ["1.1.1.1", "1.0.0.1"]
+  type = list(string)
+  default = ["1.1.1.1", "1.0.0.1"]
 }
 
 variable "admin_vlan_cidr" {
@@ -144,4 +144,10 @@ variable "dns_zone_exclusive" {
 variable "env_in_url" {
   description = "subdmain of the DNS zone that will be updated"
   type        = string
+}
+
+variable "zabbix_web_access" {
+  description = "Expose zabbix to web or not"
+  type        = bool
+  default     = false
 }
