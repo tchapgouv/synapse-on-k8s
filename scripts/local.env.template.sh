@@ -94,6 +94,7 @@ export SYNAPSE_MEDIA_UPLOAD_MAX_SIZE_MB="<max size of media in MB>"
 export SYNAPSE_WELCOME_ROOM="<alias of a room that will be joined by default by every user. ex: 'welcome-room'. Optional>"
 export SYNAPSE_IMAGE_TAG="<docker image tag>"
 export SYNAPSE_WHITELIST_ROOM="<room id used to store user whitelist>"
+export DEFAULT_EIMIS_NAME_SUFFFIX="<when using eimis prosante connect module, sets a default suffix to add to the display name when activity is missing from ID provider userInfo ex: ' - 🧡'>"
 # variables used to connect to Pro Santé Connect.
 # see : https://industriels.esante.gouv.fr/produits-et-services/pro-sante-connect/documentation-technique
 export PROSANTE_CONNECT_ENABLED="<true to login with PSC>"

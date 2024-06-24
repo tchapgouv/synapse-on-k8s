@@ -29,6 +29,7 @@ On the linux running this code :
 - the [terraform CLI](https://developer.hashicorp.com/terraform/downloads?product_intent=terraform)
 - the [ansible tool](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible)
 - the [kubectl tool](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/)
+- additional needed packages : `openssl`, `yq`
 
 ## Provisioning infra
 
@@ -83,7 +84,7 @@ and fill it with all the environment variables values needed. `OS_`variables rel
 The configuration part will be done with Ansible and is quite independent
 from the provisioning part.
 
-- Generate the files (kubeconfig.yml, ansible/group_vars/all.yml) and vars needed :
+- Generate the files (kubeconfig-$ENVIRONMENT.yml, ansible/group_vars/all.yml) and vars needed :
 
   ```bash
   ./scripts/generate_configuration_var_files.sh

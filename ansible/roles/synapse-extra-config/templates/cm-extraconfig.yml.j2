@@ -23,10 +23,12 @@ data:
         client_secret: "{{ keycloak.client_secret }}"
         scopes: ["openid", "profile"]
         user_mapping_provider:
+          module: synapse.psc_mapping_provider.ProsanteConnectMappingProvider
           config:
             localpart_template: "{% raw %}{{ user.preferred_username }}{% endraw %}"
             display_name_template: "{% raw %}{{ user.given_name }} {{ user.family_name }}{% endraw %}"
             email_template: "{% raw %}{{ user.email }}{% endraw %}"
+            default_display_name_suffix: "{{ matrix.default_eimis_name_suffix }}"
         backchannel_logout_enabled: true # Optional
 {% if prosante_connect.enabled  %}
       - idp_id: psc
@@ -48,6 +50,7 @@ data:
             localpart_template: "{% raw %}{{ user.preferred_username }}{% endraw %}"
             display_name_template: "{% raw %}{{ user.given_name }} {{ user.family_name }}{% endraw %}"
             email_template: "{% raw %}{{ user.email }}{% endraw %}"
+            default_display_name_suffix: "{{ matrix.default_eimis_name_suffix }}"
         backchannel_logout_enabled: true # Optional
 {% endif %}
 {% if matrix.servers_list is defined %}
