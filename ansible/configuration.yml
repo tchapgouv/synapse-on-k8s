@@ -37,3 +37,4 @@
     - basic
     - docker
     - zabbix
+    - prom2zabbix-webhook

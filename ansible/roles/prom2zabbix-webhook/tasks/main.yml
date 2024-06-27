@@ -1,0 +1,20 @@
+---
+- name: create folder for alertmanager-zabbix-webhook
+  ansible.builtin.file:
+    path: ./prom2zabbix-webhook
+    state: directory
+
+- name: copy alertmanager-zabbix-webhook docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.yml
+    dest: ./prom2zabbix-webhook/docker-compose.yml
+
+- name: copy alertmanager-zabbix-webhook config file
+  ansible.builtin.template:
+    src: config.yaml
+    dest: ./prom2zabbix-webhook/config.yaml
+
+- name: Launch alertmanager-zabbix-webhook with docker-compose
+  community.docker.docker_compose_v2:
+    project_src: ./prom2zabbix-webhook
+    files: docker-compose.yml

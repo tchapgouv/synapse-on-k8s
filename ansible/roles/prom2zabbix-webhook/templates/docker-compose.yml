@@ -1,0 +1,8 @@
+services:
+  prom2zabbix-webhook:
+    container_name: webhook
+    image: gmauleon/alertmanager-zabbix-webhook
+    volumes:
+      - ./config.yaml:/etc/webhook/config.yaml
+    ports:
+      - "{{ monitoring.zabbix.webhook_port }}:{{ monitoring.zabbix.webhook_port }}"
