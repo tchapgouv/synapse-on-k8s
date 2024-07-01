@@ -38,6 +38,11 @@ The following steps will setup various OVH resources necessary to run the Synaps
 > [!TIP]
 > The Octavia load balancer is only useful if you want the cluster to be isolated from the web. If it's not necessary don't use it and remove `type: NodePort` in `ansible/roles/ingress-controller/tasks/templates/ingress-nginx-service.yml` and manually set the dns entry
 
+---
+
+> [!TIP]
+> The other thing you may want to consider if not running an official production environment is to get rid of `admin_vm` this part was done to make sure the alert manager was able to reach an hypothetic Zabbix server on the admin private network.
+
 - Create in the local folder a local.env.sh file copying the script/local.env.template.sh file
 and fill it with all the environment variables values needed. `OS_`variables relate to the openstack part.
 
