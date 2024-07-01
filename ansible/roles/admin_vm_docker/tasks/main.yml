@@ -21,7 +21,7 @@
 
 - name: Update apt and install docker-ce
   apt:
-    name: docker-ce=5:27.0.3-1~debian.12~bookworm  
+    name: docker-ce=5:27.0.3-1~debian.12~bookworm
     state: present
     update_cache: true
 
