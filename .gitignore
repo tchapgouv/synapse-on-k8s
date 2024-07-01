@@ -37,9 +37,6 @@ local
 ansible/ansible_collections
 ansible/group_vars/all.yml
 ansible/inventories/admin_inventory
-ansible/roles/geerlingguy.*
-ansible/roles/wdijkerman.php
-
 
 #
 terraform_output.json
