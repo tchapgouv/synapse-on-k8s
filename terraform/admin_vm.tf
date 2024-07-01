@@ -1,5 +1,5 @@
 locals {
-  create_fip = var.env_name != "production" && var.zabbix_web_access ? true : false
+  create_fip = var.env_name != "production" ? true : false
 }
 
 resource "openstack_compute_keypair_v2" "vm_admin_keypair" {

@@ -145,9 +145,3 @@ variable "env_in_url" {
   description = "subdmain of the DNS zone that will be updated"
   type        = string
 }
-
-variable "zabbix_web_access" {
-  description = "Expose zabbix to web or not"
-  type        = bool
-  default     = false
-}
