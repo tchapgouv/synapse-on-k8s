@@ -2,14 +2,11 @@
 - name: Install required system packages
   apt:
     pkg:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - software-properties-common
-      - python3-pip
-      - virtualenv
-      - python3-setuptools
-    state: latest
+      - apt-transport-https=2.6.1
+      - software-properties-common=0.99.30-4.1~deb12u1
+      - virtualenv=20.17.1+ds-1
+      - python3-setuptools=66.1.1-1
+    state: present
     update_cache: true
 
 - name: Add Docker GPG apt Key
@@ -24,13 +21,13 @@
 
 - name: Update apt and install docker-ce
   apt:
-    name: docker-ce
-    state: latest
+    name: docker-ce=5:27.0.3-1~debian.12~bookworm  
+    state: present
     update_cache: true
 
 - name: Install Docker Module for Python
   apt:
     pkg:
-      - python3-docker
-    state: latest
+      - python3-docker=5.0.3-1
+    state: present
     update_cache: true
