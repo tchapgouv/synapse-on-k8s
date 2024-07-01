@@ -32,7 +32,7 @@
     - production
     - admin_vm
   roles:
-    - basic
-    - docker
-    - zabbix
-    - prom2zabbix-webhook
+    - admin_vm_basic
+    - admin_vm_docker
+    - admin_vm_zabbix
+    - admin_vm_prom2zabbix-webhook
