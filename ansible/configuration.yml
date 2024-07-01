@@ -28,8 +28,6 @@
   become: true
   vars:
     absent_or_present: present
-  vars_files:
-    - group_vars/admin.yml
   tags:
     - production
     - admin_vm
