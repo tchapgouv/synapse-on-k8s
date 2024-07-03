@@ -1,4 +1,10 @@
 ---
+- name: create folder for zabbix-docker
+  ansible.builtin.file:
+    path: ./zabbix-docker
+    state: directory
+    mode: "0644"
+
 - name: Get docker compose from github
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/zabbix/zabbix-docker/48a86dfa8de7a3d43a392de11aac95d792983e71/docker-compose_v3_alpine_pgsql_latest.yaml"
