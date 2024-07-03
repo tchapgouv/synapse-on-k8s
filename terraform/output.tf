@@ -112,3 +112,19 @@ output "base_url" {
   description = "Base URL of the environment"
   value       = local.base_url
 }
+
+output "public_vm_admin_ip" {
+  description = "public IP of the admin VM, not available in production or when zabbix not exposed"
+  value       = local.external_vm_admin_ip
+}
+
+output "private_vm_admin_ip" {
+  description = "Private IP of the admin VM, not available in production"
+  value       = local.internal_vm_admin_ip
+}
+
+output "vm_admin_private_key" {
+  description = "private key of the keypair generated during the creation of the admin VM"
+  value       = openstack_compute_keypair_v2.vm_admin_keypair.private_key
+  sensitive   = true
+}

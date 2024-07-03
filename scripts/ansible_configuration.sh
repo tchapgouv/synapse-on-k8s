@@ -15,9 +15,9 @@ echo "KUBECONFIG=${KUBECONFIG}"
 cd $ANSIBLE_ROOT
 
 # Configure ansible
-echo "--- ansible-galaxy install collections ---"
-ansible-galaxy collection install -r "requirements.yml"
+echo "--- ansible-galaxy install collections and roles ---"
+ansible-galaxy install -r "requirements.yml"
 
 # Run ansible playbook
 echo "--- playbook configuration ---"
-ansible-playbook configuration.yml "$@"
+ansible-playbook  -i inventories configuration.yml --skip-tags ${ENVIRONMENT} "$@"

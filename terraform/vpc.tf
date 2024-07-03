@@ -52,17 +52,8 @@ resource "openstack_networking_subnet_v2" "admin_subnet" {
   dns_nameservers = var.admin_vlan_dns
 }
 
-resource "openstack_networking_router_v2" "admin_router" {
-  count               = var.env_name != "production" ? 1 : 0
-  region              = var.os_region_name
-  name                = "${var.env_name}-admin-router"
-  admin_state_up      = true
-  external_network_id = data.openstack_networking_network_v2.ext_net.id
-}
-
 resource "openstack_networking_router_interface_v2" "admin_router_interface" {
-  count     = var.env_name != "production" ? 1 : 0
-  router_id = openstack_networking_router_v2.admin_router[0].id
+  router_id = openstack_networking_router_v2.router[0].id
   region    = var.os_region_name
   subnet_id = openstack_networking_subnet_v2.admin_subnet.id
 }

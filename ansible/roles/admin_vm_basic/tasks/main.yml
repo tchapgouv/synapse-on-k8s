@@ -1,0 +1,12 @@
+---
+- name: Install basic packages
+  apt:
+    name:
+      - ca-certificates=20230311
+      - curl=7.88.1-10+deb12u6
+      - python3=3.11.2-1+b1
+      - python3-pip=23.0.1+dfsg-1
+      - python3-netaddr=0.8.0-2
+      - acl=2.3.1-3
+    state: present
+    update_cache: True

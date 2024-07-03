@@ -46,10 +46,6 @@ alertmanager:
             zabbix: enabled
           receiver: 'team_middle'
           continue: true
-#        - matchers:
-#            - severity =~ "warning|critical"
-#          receiver: 'webhook_receiver'
-#          continue: true
     receivers:
       - name: 'null'
       - name: 'zabbix'
@@ -58,9 +54,5 @@ alertmanager:
       - name: 'team_middle'
         email_configs:
           - to: "{{monitoring.alertmanager.receivers.mail}}"
-#      - name: 'webhook_receiver'
-#        webhook_configs:
-#          - url: 'https://webhook.site/e2567458-cb9b-4800-9a74-117e80f924f8'
-#            send_resolved: false
     templates:
       - '/etc/alertmanager/config/*.tmpl'

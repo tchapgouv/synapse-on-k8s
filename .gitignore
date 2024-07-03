@@ -36,6 +36,7 @@ local
 # Ansible temp files
 ansible/ansible_collections
 ansible/group_vars/all.yml
+ansible/inventories/admin_inventory
 
 #
 terraform_output.json

@@ -12,3 +12,6 @@ rules:
     forbid: false
     min-spaces-inside: 0
     max-spaces-inside: 1
+ignore:
+  - ansible/ansible_collections/
+  - ansible/group_vars/all.yml

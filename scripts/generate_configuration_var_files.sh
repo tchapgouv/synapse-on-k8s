@@ -5,17 +5,23 @@
 # - connexion to database from the output of terraform
 # - group_vars/all.yml needed by Ansible
 
-
-echo "Getting terraform outputs"
 LOCAL=../local
 (
     cd terraform
- 
+    echo "Getting terraform outputs"
+    echo "kubeconfig"
     terraform output --raw kubeconfig >$LOCAL/kubeconfig.yml
+    chmod 600 $LOCAL/kubeconfig.yml
+    echo "done."
+    echo "ssh private key"
+    terraform output --raw vm_admin_private_key > $LOCAL/ssh_private_key.pem
+    chmod 600 $LOCAL/ssh_private_key.pem
+    echo "done."
+    echo "Other outputs"
     terraform output -json >terraform_output.json
     echo "done."
 
-    chmod 600 $LOCAL/kubeconfig.yml
+
     export SYNAPSE_DATABASE_URL=$(jq -r ". | .\"synapse_databse_uri\".value" terraform_output.json)
     export SYNAPSE_DB_PASSWORD=$(jq -r ". | .\"synapse_db_password\".value" terraform_output.json)
     export SYNAPSE_DB_HOST=$(jq -r ". | .\"synapse_db_host\".value" terraform_output.json)
@@ -33,5 +39,15 @@ LOCAL=../local
     export BASE_URL=$(jq -r ". | .\"base_url\".value" terraform_output.json)
     export REDIS_PASSWORD=$(openssl rand -base64 14)
 
+    # VM admin is built in every environment BUT production
+    if [ ${ENVIRONMENT} != 'production' ]; then
+      export PUBLIC_VM_ADMIN_IP=$(jq -r ". | .\"public_vm_admin_ip\".value" terraform_output.json)
+      export ZABBIX_IP=$(jq -r ". | .\"private_vm_admin_ip\".value" terraform_output.json)
+      envsubst <"../scripts/admin_inventory.tmpl" > ../ansible/inventories/admin_inventory
+      export AM_ZABBIX_WEBHOOK_PORT="9898"
+      export AM_ZABBIX_URL="http://${ZABBIX_IP}:${AM_ZABBIX_WEBHOOK_PORT}/alerts"
+    fi
+
     envsubst <"../ansible/group_vars/env_vars.tmpl" > ../ansible/group_vars/all.yml
+
 )
