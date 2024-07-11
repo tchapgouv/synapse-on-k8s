@@ -4,6 +4,7 @@
     repo: 'https://github.com/zabbix/zabbix-docker.git'
     dest: ./zabbix-docker
     version: 7.0
+    force: true
 
 - name: Launch Zabbix with docker-compose
   community.docker.docker_compose_v2:
