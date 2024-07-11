@@ -67,19 +67,19 @@ resource "openstack_networking_floatingip_associate_v2" "lb_fip_association" {
 }
 
 resource "openstack_lb_member_v2" "k8s_member_websecure" {
-  count         = length(local.nodes_ips)
+  count         = length(terraform_data.nodes_ips.output)
   name          = "k8s-websecure-member-${count.index}"
   pool_id       = openstack_lb_pool_v2.k8s_websecure_pool.id
-  address       = local.nodes_ips[count.index]
+  address       = terraform_data.nodes_ips.output[count.index]
   protocol_port = var.ingress_service_port_websecure
   depends_on    = [data.openstack_compute_instance_v2.instance]
 }
 
 resource "openstack_lb_member_v2" "k8s_member_web" {
-  count         = length(local.nodes_ips)
+  count         = length(terraform_data.nodes_ips.output)
   name          = "k8s-web-member-${count.index}"
   pool_id       = openstack_lb_pool_v2.k8s_web_pool.id
-  address       = local.nodes_ips[count.index]
+  address       = terraform_data.nodes_ips.output[count.index]
   protocol_port = var.ingress_service_port_web
   depends_on    = [data.openstack_compute_instance_v2.instance]
 }

@@ -38,11 +38,10 @@ data "openstack_compute_instance_v2" "instance" {
   id    = data.ovh_cloud_project_kube_nodepool_nodes.nodes.nodes[count.index].instance_id
 }
 
-locals {
-  // List of each node IP on the app network
-  nodes_ips = flatten([
+resource "terraform_data" "nodes_ips" {
+  input = flatten([
     for instances in data.openstack_compute_instance_v2.instance : [
-      for n in instances.network : n.fixed_ip_v4 if n.name != "Ext-Net"
+      for n in instances.network : n.fixed_ip_v4 if n.name == var.app_vlan_name
     ]
   ])
 }

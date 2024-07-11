@@ -183,7 +183,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.7.*
+          terraform_version: 1.9.*
 
       # Generates a terraform.tfvars file from the environment variables
       - name: Generate tfvars file
