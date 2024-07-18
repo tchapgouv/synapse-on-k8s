@@ -6,27 +6,30 @@
 #  - the S3 media repo storage
 # Matrix-synapse pods are restarted at the end of the process
 #
-- name: create extraconfig configmap
-  kubernetes.core.k8s:
-    state: present
-    template: "cm-extraconfig.yml.j2"
+- block:
+    - name: create extraconfig configmap
+      kubernetes.core.k8s:
+        state: present
+        template: "cm-extraconfig.yml.j2"
 
-- name: mount extraconfig configmap on matrix-synapse pod
-  shell: "kubectl patch deployment matrix-synapse -p '{{ lookup('template', 'deployment-patch.yml') }}' "
+    - name: mount extraconfig configmap on matrix-synapse pod
+      shell: "kubectl patch deployment matrix-synapse -p '{{ lookup('template', 'deployment-patch.yml') }}' "
 
-- name: Scale down matrix-synapse deployment
-  kubernetes.core.k8s_scale:
-    api_version: v1
-    kind: Deployment
-    name: matrix-synapse
-    namespace: default
-    replicas: 0
+    - name: Scale down matrix-synapse deployment
+      kubernetes.core.k8s_scale:
+        api_version: v1
+        kind: Deployment
+        name: matrix-synapse
+        namespace: default
+        replicas: 0
 
-- name: Scale up matrix-synapse deployment (restart)
-  kubernetes.core.k8s_scale:
-    api_version: v1
-    kind: Deployment
-    name: matrix-synapse
-    namespace: default
-    replicas: 1
-    wait_timeout: 120
+    - name: Scale up matrix-synapse deployment (restart)
+      kubernetes.core.k8s_scale:
+        api_version: v1
+        kind: Deployment
+        name: matrix-synapse
+        namespace: default
+        replicas: 1
+        wait_timeout: 120
+
+  when: synapse_was_already_running == "0"

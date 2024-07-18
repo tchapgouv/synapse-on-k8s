@@ -3,14 +3,17 @@
 # Role used to upload to synapse the images used by authentication buttons
 # The registered variables mxc_XX contain the MXC uris of the images. They will be used in later roles
 #
-- name: PSC connect button image - upload files to synapse and retrieve the MXC uri
-  shell:
-    "curl --data-binary @roles/auth-buttons/files/ProSanteConnect_PICTO_COULEURS.png 'https://{{ matrix.server_name }}/_matrix/media/v3/upload?filename=psc_picto.png'   -X 'POST'   -H 'Authorization:
-    Bearer {{ admin_access_token }}'   -H 'Content-Type: image/png'   --compressed | jq -r '.content_uri'"
-  register: mxc_psc
+- block:
+    - name: PSC connect button image - upload files to synapse and retrieve the MXC uri
+      shell:
+        "curl --data-binary @roles/auth-buttons/files/ProSanteConnect_PICTO_COULEURS.png 'https://{{ matrix.server_name }}/_matrix/media/v3/upload?filename=psc_picto.png'   -X 'POST'   -H 'Authorization:
+        Bearer {{ admin_access_token }}'   -H 'Content-Type: image/png'   --compressed | jq -r '.content_uri'"
+      register: mxc_psc
 
-- name: EIMIS connect button image - upload files to synapse and retrieve the MXC uri
-  shell:
-    "curl --data-binary @roles/auth-buttons/files/eimis-connect.png 'https://{{ matrix.server_name }}/_matrix/media/v3/upload?filename=eimis-connect.png'   -X 'POST'   -H 'Authorization:
-    Bearer {{ admin_access_token }}'   -H 'Content-Type: image/png'   --compressed | jq -r '.content_uri'"
-  register: mxc_eimis_connect
+    - name: EIMIS connect button image - upload files to synapse and retrieve the MXC uri
+      shell:
+        "curl --data-binary @roles/auth-buttons/files/eimis-connect.png 'https://{{ matrix.server_name }}/_matrix/media/v3/upload?filename=eimis-connect.png'   -X 'POST'   -H 'Authorization:
+        Bearer {{ admin_access_token }}'   -H 'Content-Type: image/png'   --compressed | jq -r '.content_uri'"
+      register: mxc_eimis_connect
+
+  when: synapse_was_already_running == "0"

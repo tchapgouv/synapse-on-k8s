@@ -115,6 +115,13 @@ This will lead to the installation of the following components in the cluster :
   - a prometheus/grafana stack for monitoring
   - an alpha unofficial version of a MS teams bridge
 
+## Synapse config update
+
+There's no easy way to update Synapse configuration (for some good reasons below), so if you made changes to one of the following roles [`first-admin`, `discovery-rooms`, `synapse-extra-config`, `auth-buttons`] you'll need to run the script `./scripts/remove_synapse_deloyment.sh` before running `./scripts/ansible_configuration.sh` script. It's done automatically if env var `RESET_SYNAPSE_DEPLOYMENT` is set to `true`.
+
+- synapse config lies in configmaps which can't be updated in place
+- in extraconfig role, it's possible to disable simple login causing first-admin and auth-buttons to fail.
+
 ## Other credits
 
 - The Matrix-synapse stack is based on the work done by [Alexander Olofsson](https://gitlab.com/ananace) :

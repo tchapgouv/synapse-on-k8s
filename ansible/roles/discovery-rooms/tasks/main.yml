@@ -1,27 +1,30 @@
 ---
-- name: Log in as dummy user to get a token
-  ansible.builtin.import_tasks:
-    file: dummy-user.yml
+- block:
+    - name: Log in as dummy user to get a token
+      ansible.builtin.import_tasks:
+        file: dummy-user.yml
 
-- name: (re)create the discovery room
-  ansible.builtin.import_tasks:
-    file: discovery-room.yml
+    - name: (re)create the discovery room
+      ansible.builtin.import_tasks:
+        file: discovery-room.yml
 
-- name: add all users to discovery room
-  ansible.builtin.import_tasks:
-    file: join-discovery-room.yml
+    - name: add all users to discovery room
+      ansible.builtin.import_tasks:
+        file: join-discovery-room.yml
 
-- name: Dummy user joins external discovery rooms listed in matrix.servers_list
-  uri:
-    url: "https://{{ matrix.server_name }}/_matrix/client/r0/join/%23discoveryroom:{{ item }}"
-    method: POST
-    body: ""
-    status_code: 200, 201
-    body_format: json
-    use_proxy: false
-    return_content: no
-    follow_redirects: all
-    headers:
-      Authorization: "Bearer {{ dummy_access_token }}"
-  loop: "{{ matrix.servers_list }}"
-  ignore_errors: true
+    - name: Dummy user joins external discovery rooms listed in matrix.servers_list
+      uri:
+        url: "https://{{ matrix.server_name }}/_matrix/client/r0/join/%23discoveryroom:{{ item }}"
+        method: POST
+        body: ""
+        status_code: 200, 201
+        body_format: json
+        use_proxy: false
+        return_content: no
+        follow_redirects: all
+        headers:
+          Authorization: "Bearer {{ dummy_access_token }}"
+      loop: "{{ matrix.servers_list }}"
+      ignore_errors: true
+
+  when: synapse_was_already_running == "0"
